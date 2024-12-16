@@ -1,21 +1,9 @@
-package model.entity;
+package model.dto;
 
-import java.io.Serializable;
 import java.sql.Date;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
-
-@MappedSuperclass
-public class Persona implements Serializable{
-	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PersonaDTO {
 	private Long UUID;
-	
 	private String nombre;
 	private String apellido;
 	private String direccion;
@@ -25,7 +13,7 @@ public class Persona implements Serializable{
 	private String celular;
 	private String email;
 	
-	public Persona(Long UUID, String nombre, String apellido, String direccion, String dni, Date fecha_nac,
+	public PersonaDTO(Long UUID, String nombre, String apellido, String direccion, String dni, Date fecha_nac,
 			String nacionalidad, String celular, String email) {
 		this.UUID = UUID;
 		this.nombre = nombre;
