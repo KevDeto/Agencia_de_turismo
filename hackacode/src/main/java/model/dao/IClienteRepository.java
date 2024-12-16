@@ -1,5 +1,5 @@
 package model.dao;
 
-public class IClienteRepository {
+public interface IClienteRepository extends IPersonaRepository{
 
 }
