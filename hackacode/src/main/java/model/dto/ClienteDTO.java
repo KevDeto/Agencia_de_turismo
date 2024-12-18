@@ -7,4 +7,6 @@ public class ClienteDTO extends PersonaDTO{
 			String nacionalidad, String celular, String email) {
 		super(UUID, nombre, apellido, direccion, dni, fecha_nac, nacionalidad, celular, email);
 	}
+	
+	
 }
