@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import model.dao.IClienteRepository;
 import model.dto.ClienteDTO;
 import model.entity.Cliente;
-import model.entity.Persona;
 import service.IClienteService;
 
 @Service
@@ -18,46 +17,53 @@ public class ClienteServiceImpl implements IClienteService {
 	private IClienteRepository clienteRepository;
 
 	@Override
-	public Cliente guardar(Cliente cliente) {
-		return clienteRepository.save(cliente);
+	public ClienteDTO guardar(ClienteDTO clienteDTO) {
+		return clienteRepository.save(clienteDTO);
 	}
 
 	@Override
-	public List<Cliente> obtenerTodos() {
+	public List<ClienteDTO> obtenerTodos() {
 		return clienteRepository.findAll();
 	}
 
 	@Override
-	public Cliente obtenerPorId(Long id) {
+	public ClienteDTO obtenerPorId(Long id) {
 		return clienteRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
 	}
 
 	@Override
-	public Cliente actualizar(Long id, Cliente cliente) {
-		Cliente clienteActualizado = (Cliente) clienteRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
-		// clienteActualizado.setNombre(cliente);
-//	    // Actualizamos los campos permitidos
-//        cliente.setNombre(clienteDetalles.getNombre());
-//        cliente.setApellido(clienteDetalles.getApellido());
-//        cliente.setDni(clienteDetalles.getDni());
-//        cliente.setEmail(clienteDetalles.getEmail());
-//
-//        return clienteDAO.save(cliente);
-//    }
-//
-//    @Override
-//    public void eliminar(Long id) {
-//        clienteDAO.deleteById(id); // Método deleteById de JpaRepository
-//    }
-		return clienteActualizado;
+	public ClienteDTO actualizar(Long id, ClienteDTO clienteDTO) {
+	    // Buscar la entidad en el repositorio
+	    ClienteDTO cliente = clienteRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+	    // Actualizar los campos de la entidad
+	    cliente.setNombre(clienteDTO.getNombre());
+	    cliente.setApellido(clienteDTO.getApellido());
+	    cliente.setDni(clienteDTO.getDni());
+	    cliente.setEmail(clienteDTO.getEmail());
+
+	    // Guardar la entidad actualizada
+	    ClienteDTO clienteActualizado = clienteRepository.save(cliente);
+
+	    // Convertir la entidad a DTO antes de devolverla
+	    return entityToDTO(clienteActualizado);
+	}
+
+	// Conversión de entidad a DTO
+	private ClienteDTO entityToDTO(ClienteDTO clienteActualizado) {
+	    ClienteDTO dto = new ClienteDTO();
+	    dto.setNombre(clienteActualizado.getNombre());
+	    dto.setApellido(clienteActualizado.getApellido());
+	    dto.setDni(clienteActualizado.getDni());
+	    dto.setEmail(clienteActualizado.getEmail());
+	    return dto;
 	}
 
 	@Override
 	public void eliminar(Long id) {
 		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import model.entity.Cliente;
+import model.dto.ClienteDTO;
 import service.IClienteService;
 
 @RestController
@@ -24,26 +24,26 @@ public class ClienteController {
 	private IClienteService clienteService;
 
 	@PostMapping
-	public ResponseEntity<Cliente> crearCliente(@RequestBody Cliente cliente) {
-		Cliente nuevoCliente = clienteService.guardar(cliente);
+	public ResponseEntity<ClienteDTO> crearCliente(@RequestBody ClienteDTO clienteDTO) {
+		ClienteDTO nuevoCliente = clienteService.guardar(clienteDTO);
 		return ResponseEntity.ok(nuevoCliente);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<List<Cliente>> obtenerClientes() {
-		List<Cliente> clientes = clienteService.obtenerTodos();
+	public ResponseEntity<List<ClienteDTO>> obtenerClientes() {
+		List<ClienteDTO> clientes = clienteService.obtenerTodos();
 		return ResponseEntity.ok(clientes);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Cliente> obtenerClientePorId(@PathVariable Long id) {
-		Cliente cliente = clienteService.obtenerPorId(id);
+	public ResponseEntity<ClienteDTO> obtenerClientePorId(@PathVariable Long id) {
+		ClienteDTO cliente = clienteService.obtenerPorId(id);
 		return ResponseEntity.ok(cliente);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Cliente> actualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
-		Cliente clienteActualizado = clienteService.actualizar(id, cliente);
+	public ResponseEntity<ClienteDTO> actualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
+		ClienteDTO clienteActualizado = clienteService.actualizar(id, clienteDTO);
 		return ResponseEntity.ok(clienteActualizado);
 	}
 

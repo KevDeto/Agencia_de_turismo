@@ -1,7 +1,5 @@
 package controller;
 
-import service.IEmpleadoService;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import model.entity.Empleado;
+import model.dto.EmpleadoDTO;
+import service.IEmpleadoService;
 
 @RestController
 @RequestMapping("/empleado")
@@ -25,26 +24,26 @@ public class EmpleadoController {
 	private IEmpleadoService empleadoService;
 
 	@PostMapping
-	public ResponseEntity<Empleado> crearEmpleado(@RequestBody Empleado empleado) {
-		Empleado nuevoEmpleado = empleadoService.guardar(empleado);
+	public ResponseEntity<EmpleadoDTO> crearEmpleado(@RequestBody EmpleadoDTO empleadoDTO) {
+		EmpleadoDTO nuevoEmpleado = empleadoService.guardar(empleadoDTO);
 		return ResponseEntity.ok(nuevoEmpleado);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Empleado>> obtenerEmpleados() {
-		List<Empleado> empleados = empleadoService.obtenerTodos();
+	public ResponseEntity<List<EmpleadoDTO>> obtenerEmpleados() {
+		List<EmpleadoDTO> empleados = empleadoService.obtenerTodos();
 		return ResponseEntity.ok(empleados);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Empleado> obtenerEmpleadoPorId(@PathVariable Long id) {
-		Empleado empleado = empleadoService.obtenerPorId(id);
+	public ResponseEntity<EmpleadoDTO> obtenerEmpleadoPorId(@PathVariable Long id) {
+		EmpleadoDTO empleado = empleadoService.obtenerPorId(id);
 		return ResponseEntity.ok(empleado);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Empleado> actualizarEmpleado(@PathVariable Long id, @RequestBody Empleado empleado) {
-		Empleado empleadoActualizado = empleadoService.actualizar(id, empleado);
+	public ResponseEntity<EmpleadoDTO> actualizarEmpleado(@PathVariable Long id, @RequestBody EmpleadoDTO empleadoDTO) {
+		EmpleadoDTO empleadoActualizado = empleadoService.actualizar(id, empleadoDTO);
 		return ResponseEntity.ok(empleadoActualizado);
 	}
 
