@@ -3,7 +3,6 @@ package model.dto;
 import java.sql.Date;
 
 public class PersonaDTO {
-	private Long UUID;
 	private String nombre;
 	private String apellido;
 	private String direccion;
@@ -12,10 +11,9 @@ public class PersonaDTO {
 	private String nacionalidad;
 	private String celular;
 	private String email;
-	
-	public PersonaDTO(Long UUID, String nombre, String apellido, String direccion, String dni, Date fecha_nac,
-			String nacionalidad, String celular, String email) {
-		this.UUID = UUID;
+
+	public PersonaDTO(String nombre, String apellido, String direccion, String dni, Date fecha_nac, String nacionalidad,
+			String celular, String email) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.direccion = direccion;
@@ -26,12 +24,7 @@ public class PersonaDTO {
 		this.email = email;
 	}
 
-	public Long getUUID() {
-		return UUID;
-	}
-
-	public void setUUID(Long uUID) {
-		UUID = uUID;
+	public PersonaDTO() {
 	}
 
 	public String getNombre() {
@@ -97,6 +90,5 @@ public class PersonaDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
+
 }
