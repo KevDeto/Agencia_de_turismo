@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import model.dto.ClienteDTO;
 import service.IClienteService;
 
 @RestController
+@Controller
 @RequestMapping("/cliente")
 public class ClienteController {
 
@@ -29,7 +31,7 @@ public class ClienteController {
 		return ResponseEntity.ok(nuevoCliente);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping
 	public ResponseEntity<List<ClienteDTO>> obtenerClientes() {
 		List<ClienteDTO> clientes = clienteService.obtenerTodos();
 		return ResponseEntity.ok(clientes);

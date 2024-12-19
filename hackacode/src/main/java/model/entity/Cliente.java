@@ -3,8 +3,10 @@ package model.entity;
 import java.sql.Date;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "cliente")
 public class Cliente extends Persona{
 	private static final long serialVersionUID = 1L;
 

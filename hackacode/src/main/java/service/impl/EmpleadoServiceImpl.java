@@ -65,5 +65,4 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
 	public void eliminar(Long id) {
 		empleadoRepository.deleteById(id);
 	}
-
 }
