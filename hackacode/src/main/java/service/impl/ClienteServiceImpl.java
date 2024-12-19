@@ -1,6 +1,7 @@
 package service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import model.dao.IClienteRepository;
 import model.dto.ClienteDTO;
 import model.entity.Cliente;
+import model.mapper.ClienteMapper;
 import service.IClienteService;
 
 @Service
@@ -16,54 +18,51 @@ public class ClienteServiceImpl implements IClienteService {
 	@Autowired
 	private IClienteRepository clienteRepository;
 
+	@Autowired
+	private ClienteMapper clienteMapper;
+
 	@Override
-	public ClienteDTO guardar(ClienteDTO clienteDTO) {
-		return clienteRepository.save(clienteDTO);
+	public ClienteDTO guardar(ClienteDTO clienteDto) {
+		Cliente cliente = clienteMapper.convertirDtoEnEntidad(clienteDto);
+		Cliente clienteGuardado = clienteRepository.save(cliente);
+		return clienteMapper.convertirEntidadEnDto(clienteGuardado);
 	}
 
 	@Override
 	public List<ClienteDTO> obtenerTodos() {
-		return clienteRepository.findAll();
+		List<Cliente> clientes = clienteRepository.findAll();
+		return clientes.stream().map(clienteMapper::convertirEntidadEnDto).collect(Collectors.toList());
 	}
 
 	@Override
 	public ClienteDTO obtenerPorId(Long id) {
-		return clienteRepository.findById(id)
+		Cliente cliente = clienteRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+		return clienteMapper.convertirEntidadEnDto(cliente);
 	}
 
 	@Override
-	public ClienteDTO actualizar(Long id, ClienteDTO clienteDTO) {
-	    // Buscar la entidad en el repositorio
-	    ClienteDTO cliente = clienteRepository.findById(id)
-	            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+	public ClienteDTO actualizar(Long id, ClienteDTO clienteDto) {
+		Cliente cliente = clienteRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
-	    // Actualizar los campos de la entidad
-	    cliente.setNombre(clienteDTO.getNombre());
-	    cliente.setApellido(clienteDTO.getApellido());
-	    cliente.setDni(clienteDTO.getDni());
-	    cliente.setEmail(clienteDTO.getEmail());
+		cliente.setNombre(clienteDto.getNombre());
+		cliente.setApellido(clienteDto.getApellido());
+		cliente.setDireccion(clienteDto.getDireccion());
+		cliente.setDni(clienteDto.getDni());
+		cliente.setFecha_nac(clienteDto.getFecha_nac());
+		cliente.setNacionalidad(clienteDto.getNacionalidad());
+		cliente.setCelular(clienteDto.getCelular());
+		cliente.setEmail(clienteDto.getEmail());
 
-	    // Guardar la entidad actualizada
-	    ClienteDTO clienteActualizado = clienteRepository.save(cliente);
+		Cliente clienteActualizado = clienteRepository.save(cliente);
 
-	    // Convertir la entidad a DTO antes de devolverla
-	    return entityToDTO(clienteActualizado);
-	}
-
-	// Conversión de entidad a DTO
-	private ClienteDTO entityToDTO(ClienteDTO clienteActualizado) {
-	    ClienteDTO dto = new ClienteDTO();
-	    dto.setNombre(clienteActualizado.getNombre());
-	    dto.setApellido(clienteActualizado.getApellido());
-	    dto.setDni(clienteActualizado.getDni());
-	    dto.setEmail(clienteActualizado.getEmail());
-	    return dto;
+		return clienteMapper.convertirEntidadEnDto(clienteActualizado);
 	}
 
 	@Override
 	public void eliminar(Long id) {
-		// TODO Auto-generated method stub
+		clienteRepository.deleteById(id);
 	}
 
 }

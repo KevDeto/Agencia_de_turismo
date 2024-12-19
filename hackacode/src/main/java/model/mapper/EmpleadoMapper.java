@@ -23,7 +23,7 @@ public class EmpleadoMapper {
 		return empleadoDto;
 	}
 
-	public Empleado dtoToEntity(EmpleadoDTO empleadoDto) {
+	public Empleado convertirDtoEnEntidad(EmpleadoDTO empleadoDto) {
 		Empleado empleado = new Empleado();
 		empleado.setNombre(empleadoDto.getNombre());
 		empleado.setApellido(empleadoDto.getApellido());

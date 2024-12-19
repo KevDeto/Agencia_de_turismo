@@ -1,12 +1,11 @@
 package model.entity;
 
-import java.io.Serializable;
 import java.sql.Date;
 
 import jakarta.persistence.Entity;
 
 @Entity
-public class Cliente extends Persona implements Serializable {
+public class Cliente extends Persona{
 	private static final long serialVersionUID = 1L;
 
 	public Cliente(String nombre, String apellido, String direccion, String dni, Date fecha_nac, String nacionalidad,
