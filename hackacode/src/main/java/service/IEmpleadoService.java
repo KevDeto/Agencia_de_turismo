@@ -1,17 +1,14 @@
 package service;
 
+import model.dto.EmpleadoDto;
+import model.entity.Empleado;
+
 import java.util.List;
 
-import model.dto.EmpleadoDTO;
-
 public interface IEmpleadoService {
-	EmpleadoDTO guardar(EmpleadoDTO empleadoDTO);
-
-	List<EmpleadoDTO> obtenerTodos();
-
-	EmpleadoDTO obtenerPorId(Long id);
-
-	EmpleadoDTO actualizar(Long id, EmpleadoDTO empleadoDTO);
-
-	void eliminar(Long id);
+    List<Empleado> listAll();
+    Empleado save(EmpleadoDto empleadoDto);
+    Empleado findById(Integer id);
+    void delete(Empleado empleado);
+    boolean existsById(Integer id);
 }

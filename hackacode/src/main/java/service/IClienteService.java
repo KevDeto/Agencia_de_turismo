@@ -1,16 +1,14 @@
 package service;
 
-import java.util.List;
-
-import model.dto.ClienteDTO;
+import model.dto.ClienteDto;
 import model.entity.Cliente;
 
+import java.util.List;
+
 public interface IClienteService {
-	Cliente actualizar(Long id, Cliente clienteDTO);
-	
-    List<Cliente> obtenerTodos();
-    Cliente guardar(ClienteDTO clienteDto);
-    Cliente obtenerPorId(Long id);
-    void eliminar(Cliente cliente);
+    List<Cliente> listAll();
+    Cliente save(ClienteDto cliente);
+    Cliente findById(Integer id);
+    void delete(Cliente cliente);
     boolean existsById(Integer id);
 }
