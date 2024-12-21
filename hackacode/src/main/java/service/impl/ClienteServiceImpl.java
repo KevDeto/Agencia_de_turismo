@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import model.dao.IClienteRepository;
 import model.dto.ClienteDTO;
 import model.entity.Cliente;
@@ -15,53 +16,74 @@ import service.IClienteService;
 @Service
 public class ClienteServiceImpl implements IClienteService {
 
-	@Autowired
-	private IClienteRepository clienteRepository;
+	  @Autowired
+	    private IClienteRepository clienteRepository;
 
-	@Autowired
-	private ClienteMapper clienteMapper;
+	    @Transactional
+	    @Override
+	    public Cliente save(ClienteDTO clienteDto) {
+	        Cliente cliente = Cliente.builder()
+	                .idCliente(clienteDto.getIdCliente())
+	                .nombre(clienteDto.getNombre())
+	                .apellido(clienteDto.getApellido())
+	                .correo(clienteDto.getCorreo())
+	                .fechaRegistro(clienteDto.getFechaRegistro())
+	                .build();
+	        return clienteDao.save(cliente);
+	    }
 
-	@Override
-	public ClienteDTO guardar(ClienteDTO clienteDto) {
-		Cliente cliente = clienteMapper.convertirDtoEnEntidad(clienteDto);
-		Cliente clienteGuardado = clienteRepository.save(cliente);
-		return clienteMapper.convertirEntidadEnDto(clienteGuardado);
-	}
+	    @Transactional(readOnly = true)
+	    @Override
+	    public Cliente obtenerPorId(Integer id) {
+	        return clienteRepository.findById(id).orElse(null);
+	    }
 
-	@Override
-	public List<ClienteDTO> obtenerTodos() {
-		List<Cliente> clientes = clienteRepository.findAll();
-		return clientes.stream().map(clienteMapper::convertirEntidadEnDto).collect(Collectors.toList());
-	}
+	    @Transactional
+	    @Override
+	    public void delete(Cliente cliente) {
+	        clienteDao.delete(cliente);
+	    }
 
-	@Override
-	public ClienteDTO obtenerPorId(Long id) {
-		Cliente cliente = clienteRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
-		return clienteMapper.convertirEntidadEnDto(cliente);
-	}
+	    @Override
+	    public boolean existsById(Integer id) {
+	        return clienteDao.existsById(id);
+	    }
 
-	@Override
-	public ClienteDTO actualizar(Long id, ClienteDTO clienteDto) {
-		Cliente cliente = clienteRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+	    @Override
+	    public List<Cliente> listAll() {
+	        return (List)clienteDao.findAll();
+	    }
 
-		cliente.setNombre(clienteDto.getNombre());
-		cliente.setApellido(clienteDto.getApellido());
-		cliente.setDireccion(clienteDto.getDireccion());
-		cliente.setDni(clienteDto.getDni());
-		cliente.setFecha_nac(clienteDto.getFecha_nac());
-		cliente.setNacionalidad(clienteDto.getNacionalidad());
-		cliente.setCelular(clienteDto.getCelular());
-		cliente.setEmail(clienteDto.getEmail());
+		@Override
+		public Cliente guardar(ClienteDTO clienteDto) {
+			// TODO Auto-generated method stub
+			Cliente cliente = Cliente
+			return null;
+		}
+	    
+		@Override
+		public Cliente actualizar(Long id, Cliente clienteDTO) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 
-		Cliente clienteActualizado = clienteRepository.save(cliente);
+		@Override
+		public List<Cliente> obtenerTodos() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 
-		return clienteMapper.convertirEntidadEnDto(clienteActualizado);
-	}
 
-	@Override
-	public void eliminar(Long id) {
-		clienteRepository.deleteById(id);
-	}
+
+		@Override
+		public Cliente obtenerPorId(Long id) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void eliminar(Cliente cliente) {
+			// TODO Auto-generated method stub
+			
+		}
 }

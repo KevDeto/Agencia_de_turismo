@@ -2,14 +2,14 @@ package model.dto;
 
 import java.sql.Date;
 
-public class ClienteDTO extends PersonaDTO {
+import lombok.Builder;
+import lombok.Data;
+import lombok.ToString;
 
-	public ClienteDTO(String nombre, String apellido, String direccion, String dni, Date fecha_nac, String nacionalidad,
-			String celular, String email) {
-		super(nombre, apellido, direccion, dni, fecha_nac, nacionalidad, celular, email);
-	}
-	
-	public ClienteDTO() {
-	}
+@Data
+@ToString
+@Builder
+public class ClienteDTO extends PersonaDTO {
+	private static final long serialVersionUID = 1L;
 
 }

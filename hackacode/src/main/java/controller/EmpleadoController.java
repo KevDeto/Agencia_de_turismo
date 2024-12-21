@@ -19,7 +19,7 @@ import service.IEmpleadoService;
 
 @RestController
 @Controller
-@RequestMapping("/empleado")
+@RequestMapping("/api/empleado")
 public class EmpleadoController {
 
 	@Autowired
