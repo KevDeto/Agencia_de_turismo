@@ -8,7 +8,7 @@ import java.util.List;
 public interface IClienteService {
     List<Cliente> listAll();
     Cliente save(ClienteDto cliente);
-    Cliente findById(Integer id);
+    Cliente findById(Long id);
     void delete(Cliente cliente);
-    boolean existsById(Integer id);
+    boolean existsById(Long id);
 }
