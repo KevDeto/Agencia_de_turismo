@@ -54,6 +54,6 @@ public class EmpleadoImpl implements IEmpleadoService{
 
     @Override
     public List<Empleado> listAll() {
-        return (List)empleadoDao.findAll();
+        return (List<Empleado>)empleadoDao.findAll();
     }
 }

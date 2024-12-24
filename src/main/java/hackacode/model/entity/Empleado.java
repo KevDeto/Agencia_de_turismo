@@ -17,11 +17,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@Table(name = "empleados")
 public class Empleado extends Persona{
 
-	@Column(name = "cargo")
 	private String cargo;
-	@Column(name = "sueldo")
 	private double sueldo;
 }

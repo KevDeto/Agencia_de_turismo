@@ -18,7 +18,6 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @Entity
-@Table(name = "clientes")
 public class Cliente extends Persona {
 	
 }

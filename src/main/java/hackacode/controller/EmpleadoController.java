@@ -95,7 +95,7 @@ public class EmpleadoController {
                         .builder()
                         .mensaje("Guardado correctamente")
                         .objeto(EmpleadoDto.builder()
-//                                .idCliente(clienteUpdate.getIdCliente())
+                                .UUID(empleadoUpdate.getUUID())
                                 .nombre(empleadoUpdate.getNombre())
                                 .apellido(empleadoUpdate.getApellido())
                                 .dni(empleadoUpdate.getDni())

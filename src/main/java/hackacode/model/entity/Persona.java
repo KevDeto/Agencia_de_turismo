@@ -22,24 +22,15 @@ import lombok.experimental.SuperBuilder;
 @MappedSuperclass
 public class Persona implements Serializable{
 	@Id
-	@Column(name = "uuid")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long UUID;
 	
-	@Column(name = "nombre")
 	private String nombre;
-	@Column(name = "apellido")
 	private String apellido;
-	@Column(name = "dni")
 	private String dni;
-	@Column(name = "celular")
 	private String celular;
-	@Column(name = "nacionalidad")
 	private String nacionalidad;
-	@Column(name = "email")
 	private String email;
-	@Column(name = "fecha_nac")
 	private Date fecha_nac;
-	@Column(name = "direccion")
 	private String direccion;
 }
