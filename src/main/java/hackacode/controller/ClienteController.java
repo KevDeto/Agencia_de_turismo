@@ -156,7 +156,7 @@ public class ClienteController {
         return new ResponseEntity<>(MensajeResponse.builder()
                 .mensaje("")
                 .objeto(ClienteDto.builder()
-//                        .idCliente(cliente.getIdCliente())
+                        .UUID(cliente.getUUID())
                         .nombre(cliente.getNombre())
                         .apellido(cliente.getApellido())
                         .dni(cliente.getDni())
