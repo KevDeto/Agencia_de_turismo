@@ -95,7 +95,7 @@ public class ClienteController {
                         .builder()
                         .mensaje("Guardado correctamente")
                         .objeto(ClienteDto.builder()
-//                                .idCliente(clienteUpdate.getIdCliente())
+                                .UUID(clienteUpdate.getUUID())
                                 .nombre(clienteUpdate.getNombre())
                                 .apellido(clienteUpdate.getApellido())
                                 .dni(clienteUpdate.getDni())

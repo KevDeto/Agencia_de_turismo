@@ -16,6 +16,8 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 
+
+@NoArgsConstructor
 @SuperBuilder
 @Entity
 public class Cliente extends Persona {
