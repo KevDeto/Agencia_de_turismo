@@ -2,15 +2,20 @@ package hackacode.model.entity;
 
 import java.util.Date;
 
-import hackacode.model.dto.ClienteDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 public class Venta {
@@ -20,5 +25,8 @@ public class Venta {
 	
 	private Date fecha_venta;
 	private double monto_total;
-	private ClienteDto clienteDto;
+	
+	@ManyToOne
+	@JoinColumn(name = "cliente_uuid")
+	private Cliente cliente;
 }

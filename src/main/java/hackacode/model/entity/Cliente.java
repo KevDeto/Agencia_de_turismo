@@ -1,18 +1,11 @@
 package hackacode.model.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.io.Serializable;
-import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.OneToMany;
+
+import java.util.List;
+
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 
@@ -22,4 +15,6 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Cliente extends Persona {
 	
+	@OneToMany(mappedBy = "cliente")
+	private List<Venta> ventas;
 }
