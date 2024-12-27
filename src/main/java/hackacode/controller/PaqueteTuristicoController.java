@@ -1,6 +1,8 @@
 package hackacode.controller;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -15,23 +17,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackacode.model.dto.ClienteDto;
-import hackacode.model.dto.VentaDto;
-import hackacode.model.entity.Cliente;
-import hackacode.model.entity.Venta;
+import hackacode.model.dto.PaqueteTuristicoDto;
+import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.payload.MensajeResponse;
-import hackacode.service.IVentaService;
+import hackacode.service.IPaqueteTuristicoService;
+
+
 
 @RestController
 @RequestMapping("/api/v1")
-public class VentaController {
+public class PaqueteTuristicoController {
 
 	@Autowired
-	private IVentaService ventaService;
+	private IPaqueteTuristicoService paqueteTuristicoService;
 	
-	@GetMapping("ventas")
+	@GetMapping("paquetes")
 	public ResponseEntity<?> showAll(){
-		List<Venta> getList = ventaService.listAll();
+		List<PaqueteTuristico> getList = paqueteTuristicoService.listAll();
 		if(getList == null) {
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("No hay registros")
@@ -46,14 +48,14 @@ public class VentaController {
                 HttpStatus.OK);
 	}
 	
-	@PostMapping("venta")
-	public ResponseEntity<?> create(@RequestBody VentaDto ventaDto){
-		Venta ventaSave = null;
+	@PostMapping("paquete")
+	public ResponseEntity<?> create(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto){
+		PaqueteTuristico paqueteSave = null;
         try {
-        	ventaSave = ventaService.save(ventaDto);
+        	paqueteSave = paqueteTuristicoService.save(paqueteTuristicoDto);
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("Guardado correctamente")
-                    .objeto(ventaDto)
+                    .objeto(paqueteTuristicoDto)
                     .build(),
                     HttpStatus.CREATED);
 		} catch (DataAccessException exDt) {
@@ -65,22 +67,26 @@ public class VentaController {
 		}
 	}
 	
-	@PutMapping("venta/{id}")
-	public ResponseEntity<?> update(@RequestBody VentaDto ventaDto, @PathVariable Long id) {
-		Venta ventaUpdate = null;
+	@PutMapping("paquete/{id}")
+	public ResponseEntity<?> update(@RequestBody PaqueteTuristicoDto ventaDto, @PathVariable Long id) {
+		PaqueteTuristico paqueteUpdate = null;
 		try {
-			Venta findVenta = ventaService.findById(id);
-			if(ventaService.existsById(id)) {
+			PaqueteTuristico findVenta = paqueteTuristicoService.findById(id);
+			if(paqueteTuristicoService.existsById(id)) {
                 ventaDto.setUUID(id);
-                ventaUpdate = ventaService.save(ventaDto);
+                paqueteUpdate = paqueteTuristicoService.save(ventaDto);
+                
+        	    Set<String> servicios = paqueteUpdate.getServicios().stream()
+        	            .map(servicio -> servicio.getUUID().toString())
+        	            .collect(Collectors.toSet());
+                
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
                         .mensaje("Guardado correctamente")
-                        .objeto(VentaDto.builder()
-                        		.UUID(ventaUpdate.getUUID())
-                        		.fecha_venta(ventaUpdate.getFecha_venta())
-                        		.monto_total(ventaUpdate.getMonto_total())
-                        		.cliente_uuid(ventaUpdate.getCliente().getUUID())
+                        .objeto(PaqueteTuristicoDto.builder()
+                        		.UUID(paqueteUpdate.getUUID())
+                        		.costo_paquete(paqueteUpdate.getCosto_paquete())
+                        		.servicio_turistico(servicios)
                         		.build())
                         .build(),
                         HttpStatus.CREATED);
@@ -100,12 +106,12 @@ public class VentaController {
 		}
 	}
 	
-	@DeleteMapping("venta/{id}")
+	@DeleteMapping("paquete/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		try {
-			Venta ventaDelete = ventaService.findById(id);
-			ventaService.delete(ventaDelete);
-			return new ResponseEntity<>(ventaDelete, HttpStatus.NO_CONTENT);
+			PaqueteTuristico paqueteDelete = paqueteTuristicoService.findById(id);
+			paqueteTuristicoService.delete(paqueteDelete);
+			return new ResponseEntity<>(paqueteDelete, HttpStatus.NO_CONTENT);
 		} catch (DataAccessException exDt) {
 			return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje(exDt.getMessage())
@@ -115,23 +121,27 @@ public class VentaController {
 		}
 	}
 	
-	@GetMapping("venta/{id}")
+	@GetMapping("paquete/{id}")
 	public ResponseEntity<?> showById(@PathVariable Long id) {
-		Venta venta = ventaService.findById(id);
-		if(venta == null) {
+		PaqueteTuristico paquete = paqueteTuristicoService.findById(id);
+		if(paquete == null) {
 			return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("El registro que intenta buscar no existe")
                     .objeto(null)
                     .build(),
                     HttpStatus.NOT_FOUND);
 		}
+		
+	    Set<String> servicios = paquete.getServicios().stream()
+	            .map(servicio -> servicio.getUUID().toString())
+	            .collect(Collectors.toSet());
+		
 		return new ResponseEntity<>(MensajeResponse.builder()
                 .mensaje("")
-                .objeto(VentaDto.builder()
-                		.UUID(venta.getUUID())
-                		.fecha_venta(venta.getFecha_venta())
-                		.monto_total(venta.getMonto_total())
-                		.cliente_uuid(venta.getCliente().getUUID())
+                .objeto(PaqueteTuristicoDto.builder()
+                		.UUID(paquete.getUUID())
+                		.costo_paquete(paquete.getCosto_paquete())
+                		.servicio_turistico(servicios)
                 		.build())
                 .build()
                 ,HttpStatus.OK);		

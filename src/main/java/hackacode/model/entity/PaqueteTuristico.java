@@ -31,7 +31,7 @@ public class PaqueteTuristico {
 	@JoinTable(
 			name = "paquete_servicio",
 			joinColumns = @JoinColumn(name = "paquete_uuid"),
-			inverseJoinColumns = @JoinColumn(name = "servicio_uuid")
+			inverseJoinColumns = @JoinColumn(name  = "servicio_uuid")
 			)
 	private Set<ServicioTuristico> servicios;
 	

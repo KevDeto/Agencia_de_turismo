@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 public class ServicioTuristico {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long UUID;

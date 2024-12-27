@@ -1,5 +1,14 @@
 package hackacode.model.dto;
 
-public class PaqueteTuristicoDto {
+import java.util.Set;
 
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class PaqueteTuristicoDto {
+	private Long UUID;
+	private double costo_paquete;
+	private Set<String> servicio_turistico;
 }
