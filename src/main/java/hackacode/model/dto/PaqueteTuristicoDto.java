@@ -4,8 +4,10 @@ import java.util.Set;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 @Builder
 public class PaqueteTuristicoDto {
 	private Long UUID;

@@ -27,7 +27,7 @@ public class PaqueteTuristicoImpl implements IPaqueteTuristicoService{
     @Override
     public PaqueteTuristico save(PaqueteTuristicoDto paqueteTuristicoDto) {
         Set<ServicioTuristico> servicios = paqueteTuristicoDto.getServicio_turistico().stream()
-        		.map(UUID -> servicioTuristicoDao.findById(Long.parseLong(UUID))
+        		.map(UUID -> servicioTuristicoDao.findById(Long.valueOf(UUID))
         				.orElseThrow(() -> new RuntimeException("Servicio no encontrado: " + UUID)))
                 .collect(Collectors.toSet());
     	
@@ -38,7 +38,7 @@ public class PaqueteTuristicoImpl implements IPaqueteTuristicoService{
                 .build();
         return paqueteTuristicoDao.save(paqueteTuristico);
     }
-
+    
     @Transactional(readOnly = true)
     @Override
     public PaqueteTuristico findById(Long id) {
