@@ -49,48 +49,23 @@ public class PaqueteTuristicoController {
 	}
 	
 	@PostMapping("paquete")
-	public ResponseEntity<?> create(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto) {
-	    try {
-	        PaqueteTuristico paqueteSave = paqueteTuristicoService.save(paqueteTuristicoDto);
-	        Set<String> serviciosRelacionados = paqueteSave.getServicios().stream()
-	                .map(servicio -> servicio.getUUID().toString())
-	                .collect(Collectors.toSet());
-
-	        return new ResponseEntity<>(MensajeResponse.builder()
-	                .mensaje("Guardado correctamente")
-	                .objeto(PaqueteTuristicoDto.builder()
-	                        .UUID(paqueteSave.getUUID())
-	                        .costo_paquete(paqueteSave.getCosto_paquete())
-	                        .servicio_turistico(serviciosRelacionados)
-	                        .build())
-	                .build(),
-	                HttpStatus.CREATED);
-	    } catch (DataAccessException exDt) {
-	        return new ResponseEntity<>(MensajeResponse.builder()
-	                .mensaje(exDt.getMessage())
-	                .objeto(null)
-	                .build(),
-	                HttpStatus.METHOD_NOT_ALLOWED);
-	    }
+	public ResponseEntity<?> create(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto){
+		PaqueteTuristico paqueteSave = null;
+        try {
+        	paqueteSave = paqueteTuristicoService.save(paqueteTuristicoDto);
+            return new ResponseEntity<>(MensajeResponse.builder()
+                    .mensaje("Guardado correctamente")
+                    .objeto(paqueteTuristicoDto)
+                    .build(),
+                    HttpStatus.CREATED);
+		} catch (DataAccessException exDt) {
+            return new ResponseEntity<>(MensajeResponse.builder()
+                    .mensaje(exDt.getMessage())
+                    .objeto(null)
+                    .build(),
+                    HttpStatus.METHOD_NOT_ALLOWED);
+		}
 	}
-//	@PostMapping("paquete")
-//	public ResponseEntity<?> create(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto){
-//		PaqueteTuristico paqueteSave = null;
-//        try {
-//        	paqueteSave = paqueteTuristicoService.save(paqueteTuristicoDto);
-//            return new ResponseEntity<>(MensajeResponse.builder()
-//                    .mensaje("Guardado correctamente")
-//                    .objeto(paqueteTuristicoDto)
-//                    .build(),
-//                    HttpStatus.CREATED);
-//		} catch (DataAccessException exDt) {
-//            return new ResponseEntity<>(MensajeResponse.builder()
-//                    .mensaje(exDt.getMessage())
-//                    .objeto(null)
-//                    .build(),
-//                    HttpStatus.METHOD_NOT_ALLOWED);
-//		}
-//	}
 	
 	@PutMapping("paquete/{id}")
 	public ResponseEntity<?> update(@RequestBody PaqueteTuristicoDto ventaDto, @PathVariable Long id) {
@@ -136,7 +111,7 @@ public class PaqueteTuristicoController {
 		try {
 			PaqueteTuristico paqueteDelete = paqueteTuristicoService.findById(id);
 			paqueteTuristicoService.delete(paqueteDelete);
-			return new ResponseEntity<>(paqueteDelete, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(paqueteDelete+"2", HttpStatus.NO_CONTENT);
 		} catch (DataAccessException exDt) {
 			return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje(exDt.getMessage())

@@ -48,54 +48,24 @@ public class ServicioTuristicoController {
                 HttpStatus.OK);
 	}
 
-	
-	
 	@PostMapping("servicio")
-	public ResponseEntity<?> create(@RequestBody ServicioTuristicoDto servicioTuristicoDto) {
-	    try {
-	        ServicioTuristico servicioSave = servicioTuristicoService.save(servicioTuristicoDto);
-	        Set<String> paquetesRelacionados = servicioSave.getPaquetes().stream()
-	                .map(paquete -> paquete.getUUID().toString())
-	                .collect(Collectors.toSet());
-
-	        return new ResponseEntity<>(MensajeResponse.builder()
-	                .mensaje("Guardado correctamente")
-	                .objeto(ServicioTuristicoDto.builder()
-	                        .UUID(servicioSave.getUUID())
-	                        .nombre(servicioSave.getNombre())
-	                        .descripcion(servicioSave.getDescripcion())
-	                        .destino_servicio(servicioSave.getDestino_servicio())
-	                        .costo_servicio(servicioSave.getCosto_servicio())
-	                        .paquete_turistico(paquetesRelacionados)
-	                        .build())
-	                .build(),
-	                HttpStatus.CREATED);
-	    } catch (DataAccessException exDt) {
-	        return new ResponseEntity<>(MensajeResponse.builder()
-	                .mensaje(exDt.getMessage())
-	                .objeto(null)
-	                .build(),
-	                HttpStatus.METHOD_NOT_ALLOWED);
-	    }
+	public ResponseEntity<?> create(@RequestBody ServicioTuristicoDto servicioTuristicoDto){
+		ServicioTuristico servicioSave = null;
+        try {
+        	servicioSave = servicioTuristicoService.save(servicioTuristicoDto);
+            return new ResponseEntity<>(MensajeResponse.builder()
+                    .mensaje("Guardado correctamente")
+                    .objeto(servicioTuristicoDto)
+                    .build(),
+                    HttpStatus.CREATED);
+		} catch (DataAccessException exDt) {
+            return new ResponseEntity<>(MensajeResponse.builder()
+                    .mensaje(exDt.getMessage())
+                    .objeto(null)
+                    .build(),
+                    HttpStatus.METHOD_NOT_ALLOWED);
+		}
 	}
-//	@PostMapping("servicio")
-//	public ResponseEntity<?> create(@RequestBody ServicioTuristicoDto servicioTuristicoDto){
-//		ServicioTuristico servicioSave = null;
-//        try {
-//        	servicioSave = servicioTuristicoService.save(servicioTuristicoDto);
-//            return new ResponseEntity<>(MensajeResponse.builder()
-//                    .mensaje("Guardado correctamente")
-//                    .objeto(servicioTuristicoDto)
-//                    .build(),
-//                    HttpStatus.CREATED);
-//		} catch (DataAccessException exDt) {
-//            return new ResponseEntity<>(MensajeResponse.builder()
-//                    .mensaje(exDt.getMessage())
-//                    .objeto(null)
-//                    .build(),
-//                    HttpStatus.METHOD_NOT_ALLOWED);
-//		}
-//	}
 	
 	@PutMapping("servicio/{id}")
 	public ResponseEntity<?> update(@RequestBody ServicioTuristicoDto servicioTuristicoDto, @PathVariable Long id) {
