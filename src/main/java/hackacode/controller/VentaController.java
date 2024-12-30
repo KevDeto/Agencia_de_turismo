@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackacode.model.dto.ClienteDto;
 import hackacode.model.dto.VentaDto;
-import hackacode.model.entity.Cliente;
 import hackacode.model.entity.Venta;
 import hackacode.model.payload.MensajeResponse;
 import hackacode.service.IVentaService;
