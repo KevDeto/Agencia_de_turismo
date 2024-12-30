@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,17 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackacode.model.dto.ClienteDto;
 import hackacode.model.dto.EmpleadoDto;
-import hackacode.model.entity.Cliente;
 import hackacode.model.entity.Empleado;
 import hackacode.model.payload.MensajeResponse;
-import hackacode.service.IClienteService;
 import hackacode.service.IEmpleadoService;
 
 @RestController
 @RequestMapping("/api/v1")
-@Controller
 public class EmpleadoController {
 
     @Autowired
@@ -54,13 +49,6 @@ public class EmpleadoController {
         Empleado empleadoSave = null;
         try {
         	empleadoSave = empleadoService.save(empleadoDto);
-            /* clienteDto = ClienteDto.builder()
-                    .idCliente(clienteDto.getIdCliente())
-                    .nombre(clienteDto.getNombre())
-                    .apellido(clienteDto.getApellido())
-                    .correo(clienteDto.getCorreo())
-                    .fechaRegistro(clienteDto.getFechaRegistro())
-                    .build();*/
             return new ResponseEntity<>(MensajeResponse
                     .builder()
                     .mensaje("Guardado correctamente")
@@ -84,13 +72,7 @@ public class EmpleadoController {
             if (empleadoService.existsById(id)) {
             	empleadoDto.setUUID(id);
             	empleadoUpdate = empleadoService.save(empleadoDto);
-                /* clienteDto = ClienteDto.builder()
-                        .idCliente(clienteUpdate.getIdCliente())
-                        .nombre(clienteUpdate.getNombre())
-                        .apellido(clienteUpdate.getApellido())
-                        .correo(clienteUpdate.getCorreo())
-                        .fechaRegistro(clienteUpdate.getFechaRegistro())
-                        .build();*/
+
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
                         .mensaje("Guardado correctamente")
@@ -129,14 +111,11 @@ public class EmpleadoController {
     @DeleteMapping("empleado/{id}")
     //@ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        //Map<String, Object> response = new HashMap<>();
         try {
             Empleado empleadoDelete = empleadoService.findById(id);
             empleadoService.delete(empleadoDelete);
             return new ResponseEntity<>(empleadoDelete, HttpStatus.NO_CONTENT);
         } catch (DataAccessException exDt) {
-//            response.put("mensaje", exDt.getMessage());
-//            response.put("cliente", null);
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje(exDt.getMessage())
                     .objeto(null)

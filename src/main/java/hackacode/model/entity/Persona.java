@@ -3,7 +3,6 @@ package hackacode.model.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
