@@ -17,5 +17,5 @@ public class ServicioTuristicoDto {
 	private String destino_servicio;
 	private Date fecha_servicio;
 	private double costo_servicio;
-	private Set<String> paquete_turistico;
+//	private Set<String> paquete_turistico;
 }

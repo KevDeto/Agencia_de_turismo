@@ -13,6 +13,7 @@ import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
 import hackacode.service.IPaqueteTuristicoService;
 import hackacode.utils.RelacionadorServicios;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class PaqueteTuristicoImpl implements IPaqueteTuristicoService{
@@ -30,7 +31,7 @@ public class PaqueteTuristicoImpl implements IPaqueteTuristicoService{
     			.obtenerServiciosRelacionados(paqueteTuristicoDto.getServicio_turistico());
 
         PaqueteTuristico paqueteTuristico = PaqueteTuristico.builder()
-            .UUID(paqueteTuristicoDto.getUUID())
+//            .UUID(paqueteTuristicoDto.getUUID())
             .costo_paquete(paqueteTuristicoDto.getCosto_paquete())
             .servicios(servicios) // Relación opcional
             .build();
@@ -44,10 +45,32 @@ public class PaqueteTuristicoImpl implements IPaqueteTuristicoService{
         return paqueteTuristicoDao.findById(id).orElse(null);
     }
 
+//    @Transactional
+//    @Override
+//    public void delete(PaqueteTuristico paqueteTuristico) {
+//        PaqueteTuristico paquete = paqueteTuristicoDao.findById(paqueteTuristico.getUUID())
+//                .orElseThrow(() -> new EntityNotFoundException("Paquete no encontrado"));
+//
+//        paquete.getServicios().forEach(servicio -> servicio.getPaquetes().remove(paquete));
+//        paquete.getServicios().clear();
+//        
+//        paqueteTuristicoDao.delete(paqueteTuristico);
+//    }
     @Transactional
     @Override
     public void delete(PaqueteTuristico paqueteTuristico) {
-        paqueteTuristicoDao.delete(paqueteTuristico);
+        PaqueteTuristico paquete = paqueteTuristicoDao.findById(paqueteTuristico.getUUID())
+                .orElseThrow(() -> new EntityNotFoundException("Paquete no encontrado"));
+
+        // Romper la relación con los servicios turísticos
+        paquete.getServicios().forEach(servicio -> servicio.getPaquetes().remove(paquete));
+        paquete.getServicios().clear();
+
+        // Guardar los cambios antes de eliminar
+        paqueteTuristicoDao.save(paquete);
+
+        // Eliminar el paquete
+        paqueteTuristicoDao.delete(paquete);
     }
 
     @Override

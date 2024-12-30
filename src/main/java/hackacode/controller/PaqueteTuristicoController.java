@@ -111,7 +111,7 @@ public class PaqueteTuristicoController {
 		try {
 			PaqueteTuristico paqueteDelete = paqueteTuristicoService.findById(id);
 			paqueteTuristicoService.delete(paqueteDelete);
-			return new ResponseEntity<>(paqueteDelete+"2", HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(paqueteDelete, HttpStatus.NO_CONTENT);
 		} catch (DataAccessException exDt) {
 			return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje(exDt.getMessage())

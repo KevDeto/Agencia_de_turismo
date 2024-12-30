@@ -13,6 +13,7 @@ import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
 import hackacode.service.IServicioTuristicoService;
 import hackacode.utils.RelacionadorPaquetes;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ServicioTuristicoImpl implements IServicioTuristicoService{
@@ -26,17 +27,17 @@ public class ServicioTuristicoImpl implements IServicioTuristicoService{
     @Override
     public ServicioTuristico save(ServicioTuristicoDto servicioTuristicoDto) {
     	
-    	 Set<PaqueteTuristico> paquetes = relacionadorPaquetes
-    			 .obtenerPaquetesRelacionados(servicioTuristicoDto.getPaquete_turistico());
+//    	 Set<PaqueteTuristico> paquetes = relacionadorPaquetes
+//    			 .obtenerPaquetesRelacionados(servicioTuristicoDto.getPaquete_turistico());
 
         ServicioTuristico servicioTuristico = ServicioTuristico.builder()
-            .UUID(servicioTuristicoDto.getUUID())
+//            .UUID(servicioTuristicoDto.getUUID())
             .nombre(servicioTuristicoDto.getNombre())
             .descripcion(servicioTuristicoDto.getDescripcion())
             .destino_servicio(servicioTuristicoDto.getDestino_servicio())
             .fecha_servicio(servicioTuristicoDto.getFecha_servicio())
             .costo_servicio(servicioTuristicoDto.getCosto_servicio())
-            .paquetes(paquetes) // Relación opcional
+//            .paquetes(paquetes) // Relación opcional
             .build();
 
         return servicioTuristicoDao.save(servicioTuristico);
@@ -48,10 +49,32 @@ public class ServicioTuristicoImpl implements IServicioTuristicoService{
         return servicioTuristicoDao.findById(id).orElse(null);
     }
 
+//    @Transactional
+//    @Override
+//    public void delete(ServicioTuristico servicioTuristico) {    	
+//        ServicioTuristico servicio = servicioTuristicoDao.findById(servicioTuristico.getUUID())
+//                .orElseThrow(() -> new EntityNotFoundException("Servicio no encontrado"));
+//
+//        servicio.getPaquetes().forEach(paquete -> paquete.getServicios().remove(servicio));
+//        servicio.getPaquetes().clear();
+//    	
+//    	servicioTuristicoDao.delete(servicioTuristico);
+//    }
     @Transactional
     @Override
     public void delete(ServicioTuristico servicioTuristico) {
-    	servicioTuristicoDao.delete(servicioTuristico);
+        ServicioTuristico servicio = servicioTuristicoDao.findById(servicioTuristico.getUUID())
+                .orElseThrow(() -> new EntityNotFoundException("Servicio no encontrado"));
+
+        // Romper la relación con los paquetes turísticos
+        servicio.getPaquetes().forEach(paquete -> paquete.getServicios().remove(servicio));
+        servicio.getPaquetes().clear();
+
+        // Guardar los cambios antes de eliminar
+        servicioTuristicoDao.save(servicio);
+
+        // Eliminar el servicio
+        servicioTuristicoDao.delete(servicio);
     }
 
     @Override
