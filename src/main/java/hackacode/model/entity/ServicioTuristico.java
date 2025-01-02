@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -31,7 +34,7 @@ import lombok.NoArgsConstructor;
 public class ServicioTuristico {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long UUID;
 
 	private String nombre;
@@ -40,12 +43,12 @@ public class ServicioTuristico {
 	private Date fecha_servicio;
 	private double costo_servicio;
 
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
 	@JsonIgnore
 	@JoinTable(
 			name = "paquete_servicio",
-		    joinColumns = @JoinColumn(name = "servicio_uuid", referencedColumnName = "UUID"),
-		    inverseJoinColumns = @JoinColumn(name = "paquete_uuid", referencedColumnName = "UUID")
+		    joinColumns = @JoinColumn(name = "servicio_uuid"),
+		    inverseJoinColumns = @JoinColumn(name = "paquete_uuid")
 		)
 	private Set<PaqueteTuristico> paquetes;
 }

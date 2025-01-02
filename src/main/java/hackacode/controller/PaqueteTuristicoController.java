@@ -101,7 +101,7 @@ public class PaqueteTuristicoController {
 	public ResponseEntity<?> update(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto, @PathVariable Long id) {
 		PaqueteTuristico paqueteUpdate = null;
 		try {
-			PaqueteTuristico findVenta = paqueteService.findById(id);
+			PaqueteTuristico findPaquete = paqueteService.findById(id);
 			if(paqueteService.existsById(id)) {
 				paqueteTuristicoDto.setUUID(id);
                 paqueteUpdate = paqueteService.save(paqueteTuristicoDto);

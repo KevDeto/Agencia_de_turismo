@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -29,17 +32,17 @@ import lombok.NoArgsConstructor;
 public class PaqueteTuristico {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long UUID;
 
 	private double costo_paquete;
 
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
 	@JsonIgnore
 	@JoinTable(
 			name = "paquete_servicio",
-			joinColumns = @JoinColumn(name = "paquete_uuid", referencedColumnName = "UUID"),
-			inverseJoinColumns = @JoinColumn(name = "servicio_uuid", referencedColumnName = "UUID")
+			joinColumns = @JoinColumn(name = "paquete_uuid"),
+			inverseJoinColumns = @JoinColumn(name = "servicio_uuid")
 	)
 	private Set<ServicioTuristico> servicios;
 }

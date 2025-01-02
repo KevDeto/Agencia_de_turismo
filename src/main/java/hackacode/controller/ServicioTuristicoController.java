@@ -103,7 +103,7 @@ public class ServicioTuristicoController {
 	public ResponseEntity<?> update(@RequestBody ServicioTuristicoDto servicioTuristicoDto, @PathVariable Long id) {
 		ServicioTuristico servicioUpdate = null;
 		try {
-			ServicioTuristico findVenta = servicioService.findById(id);
+			ServicioTuristico findServicio = servicioService.findById(id);
 			if(servicioService.existsById(id)) {
 				servicioTuristicoDto.setUUID(id);
 				servicioUpdate = servicioService.save(servicioTuristicoDto);
@@ -111,7 +111,7 @@ public class ServicioTuristicoController {
         	    Set<Long> servicios = servicioUpdate.getPaquetes().stream()
         	            .map(paquete -> paquete.getUUID())
         	            .collect(Collectors.toSet());
-				
+        	    
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
                         .mensaje("Guardado correctamente")
