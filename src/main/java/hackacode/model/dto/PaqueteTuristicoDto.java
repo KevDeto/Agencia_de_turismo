@@ -12,5 +12,5 @@ import lombok.ToString;
 public class PaqueteTuristicoDto {
 	private Long UUID;
 	private double costo_paquete;
-	private Set<String> servicio_turistico;
+	private Set<Long> servicio_turistico;
 }

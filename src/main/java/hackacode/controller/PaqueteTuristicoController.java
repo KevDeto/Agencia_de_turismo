@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import hackacode.model.dto.ClienteDto;
 import hackacode.model.dto.PaqueteTuristicoDto;
+import hackacode.model.entity.Cliente;
 import hackacode.model.entity.PaqueteTuristico;
+import hackacode.model.entity.ServicioTuristico;
 import hackacode.model.payload.MensajeResponse;
 import hackacode.service.IPaqueteTuristicoService;
 
@@ -29,11 +32,57 @@ import hackacode.service.IPaqueteTuristicoService;
 public class PaqueteTuristicoController {
 
 	@Autowired
-	private IPaqueteTuristicoService paqueteTuristicoService;
+	private IPaqueteTuristicoService paqueteService;
 	
-	@GetMapping("paquetes")
+    @PostMapping("paquete")
+    public ResponseEntity<?> create(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto) {
+        PaqueteTuristico paqueteSave = null;
+        try {
+        	paqueteSave = paqueteService.save(paqueteTuristicoDto);
+            return new ResponseEntity<>(MensajeResponse
+                    .builder()
+                    .mensaje("Guardado correctamente")
+                    .objeto(paqueteTuristicoDto)
+                    .build(),
+                    HttpStatus.CREATED);
+        } catch (DataAccessException exDt) {
+            return new ResponseEntity<>(MensajeResponse.builder()
+                    .mensaje(exDt.getMessage())
+                    .objeto(null)
+                    .build(),
+                    HttpStatus.METHOD_NOT_ALLOWED);
+        }
+    }
+    
+    @GetMapping("paquete/{id}")
+	public ResponseEntity<?> showById(@PathVariable Long id) {
+		PaqueteTuristico paquete = paqueteService.findById(id);
+		if(paquete == null) {
+			return new ResponseEntity<>(MensajeResponse.builder()
+                    .mensaje("El registro que intenta buscar no existe")
+                    .objeto(null)
+                    .build(),
+                    HttpStatus.NOT_FOUND);
+		}
+		
+	    Set<Long> servicios = paquete.getServicios().stream()
+	            .map(servicio -> servicio.getUUID())
+	            .collect(Collectors.toSet());
+		
+		return new ResponseEntity<>(MensajeResponse.builder()
+                .mensaje("")
+                .objeto(PaqueteTuristicoDto.builder()
+                		.UUID(paquete.getUUID())
+                		.costo_paquete(paquete.getCosto_paquete())
+                		.servicio_turistico(servicios)
+                		.build())
+                .build()
+                ,HttpStatus.OK);		
+	}
+    
+    @GetMapping("paquetes")
 	public ResponseEntity<?> showAll(){
-		List<PaqueteTuristico> getList = paqueteTuristicoService.listAll();
+		List<PaqueteTuristico> getList = paqueteService.listAll();
 		if(getList == null) {
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("No hay registros")
@@ -47,37 +96,18 @@ public class PaqueteTuristicoController {
                 .build(),
                 HttpStatus.OK);
 	}
-	
-	@PostMapping("paquete")
-	public ResponseEntity<?> create(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto){
-		PaqueteTuristico paqueteSave = null;
-        try {
-        	paqueteSave = paqueteTuristicoService.save(paqueteTuristicoDto);
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("Guardado correctamente")
-                    .objeto(paqueteTuristicoDto)
-                    .build(),
-                    HttpStatus.CREATED);
-		} catch (DataAccessException exDt) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
-		}
-	}
-	
-	@PutMapping("paquete/{id}")
-	public ResponseEntity<?> update(@RequestBody PaqueteTuristicoDto ventaDto, @PathVariable Long id) {
+    
+    @PutMapping("paquete/{id}")
+	public ResponseEntity<?> update(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto, @PathVariable Long id) {
 		PaqueteTuristico paqueteUpdate = null;
 		try {
-			PaqueteTuristico findVenta = paqueteTuristicoService.findById(id);
-			if(paqueteTuristicoService.existsById(id)) {
-                ventaDto.setUUID(id);
-                paqueteUpdate = paqueteTuristicoService.save(ventaDto);
+			PaqueteTuristico findVenta = paqueteService.findById(id);
+			if(paqueteService.existsById(id)) {
+				paqueteTuristicoDto.setUUID(id);
+                paqueteUpdate = paqueteService.save(paqueteTuristicoDto);
                 
-        	    Set<String> servicios = paqueteUpdate.getServicios().stream()
-        	            .map(servicio -> servicio.getUUID().toString())
+        	    Set<Long> servicios = paqueteUpdate.getServicios().stream()
+        	            .map(servicio -> servicio.getUUID())
         	            .collect(Collectors.toSet());
                 
                 return new ResponseEntity<>(MensajeResponse
@@ -105,12 +135,12 @@ public class PaqueteTuristicoController {
                     HttpStatus.METHOD_NOT_ALLOWED);
 		}
 	}
-	
+    
 	@DeleteMapping("paquete/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		try {
-			PaqueteTuristico paqueteDelete = paqueteTuristicoService.findById(id);
-			paqueteTuristicoService.delete(paqueteDelete);
+			PaqueteTuristico paqueteDelete = paqueteService.findById(id);
+			paqueteService.delete(paqueteDelete);
 			return new ResponseEntity<>(paqueteDelete, HttpStatus.NO_CONTENT);
 		} catch (DataAccessException exDt) {
 			return new ResponseEntity<>(MensajeResponse.builder()
@@ -119,31 +149,5 @@ public class PaqueteTuristicoController {
                     .build(),
                     HttpStatus.METHOD_NOT_ALLOWED);
 		}
-	}
-	
-	@GetMapping("paquete/{id}")
-	public ResponseEntity<?> showById(@PathVariable Long id) {
-		PaqueteTuristico paquete = paqueteTuristicoService.findById(id);
-		if(paquete == null) {
-			return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("El registro que intenta buscar no existe")
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.NOT_FOUND);
-		}
-		
-	    Set<String> servicios = paquete.getServicios().stream()
-	            .map(servicio -> servicio.getUUID().toString())
-	            .collect(Collectors.toSet());
-		
-		return new ResponseEntity<>(MensajeResponse.builder()
-                .mensaje("")
-                .objeto(PaqueteTuristicoDto.builder()
-                		.UUID(paquete.getUUID())
-                		.costo_paquete(paquete.getCosto_paquete())
-                		.servicio_turistico(servicios)
-                		.build())
-                .build()
-                ,HttpStatus.OK);		
 	}
 }

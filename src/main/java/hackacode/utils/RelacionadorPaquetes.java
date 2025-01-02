@@ -20,13 +20,13 @@ public class RelacionadorPaquetes {
 
      //@return Conjunto de entidades PaqueteTuristico que existen en la base de datos.
      
-    public Set<PaqueteTuristico> obtenerPaquetesRelacionados(Set<String> UUIDs) {
+    public Set<PaqueteTuristico> obtenerPaquetesRelacionados(Set<Long> UUIDs) {
         return Optional.ofNullable(UUIDs)
             .orElse(Collections.emptySet()) // si es null, inicializo un conjunto vacío
             .stream()
             .map(id -> {
                 try {
-                    return paqueteTuristicoDao.findById(Long.parseLong(id)).orElse(null);
+                    return paqueteTuristicoDao.findById(id).orElse(null);
                 } catch (NumberFormatException e) {
                     return null;
                 }

@@ -18,13 +18,13 @@ public class RelacionadorServicios {
     @Autowired
     private IServicioTuristicoDao servicioTuristicoDao;
 
-    public Set<ServicioTuristico> obtenerServiciosRelacionados(Set<String> UUIDs) {
+    public Set<ServicioTuristico> obtenerServiciosRelacionados(Set<Long> UUIDs) {
         return Optional.ofNullable(UUIDs)
             .orElse(Collections.emptySet())
             .stream()
             .map(id -> {
                 try {
-                    return servicioTuristicoDao.findById(Long.parseLong(id)).orElse(null);
+                    return servicioTuristicoDao.findById(id).orElse(null);
                 } catch (NumberFormatException e) {
                     return null;
                 }

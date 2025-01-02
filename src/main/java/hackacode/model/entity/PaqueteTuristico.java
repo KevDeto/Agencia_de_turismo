@@ -1,6 +1,10 @@
 package hackacode.model.entity;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -23,20 +27,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 public class PaqueteTuristico {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long UUID;
-	
+
 	private double costo_paquete;
-	
-	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+
+	@ManyToMany
+	@JsonIgnore
 	@JoinTable(
 			name = "paquete_servicio",
-			joinColumns = @JoinColumn(name = "paquete_uuid"),
-			inverseJoinColumns = @JoinColumn(name  = "servicio_uuid")
-			)
-	private Set<ServicioTuristico> servicios;	
-//	@OneToMany(mappedBy = "paquete", cascade = CascadeType.ALL, orphanRemoval = true)
-//	private Set<PaqueteServicio> paqueteServicios;
+			joinColumns = @JoinColumn(name = "paquete_uuid", referencedColumnName = "UUID"),
+			inverseJoinColumns = @JoinColumn(name = "servicio_uuid", referencedColumnName = "UUID")
+	)
+	private Set<ServicioTuristico> servicios;
 }

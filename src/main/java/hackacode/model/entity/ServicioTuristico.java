@@ -1,7 +1,11 @@
 package hackacode.model.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -12,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,9 +40,12 @@ public class ServicioTuristico {
 	private Date fecha_servicio;
 	private double costo_servicio;
 
-	@ManyToMany(mappedBy = "servicios", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany
+	@JsonIgnore
+	@JoinTable(
+			name = "paquete_servicio",
+		    joinColumns = @JoinColumn(name = "servicio_uuid", referencedColumnName = "UUID"),
+		    inverseJoinColumns = @JoinColumn(name = "paquete_uuid", referencedColumnName = "UUID")
+		)
 	private Set<PaqueteTuristico> paquetes;
-
-//	@OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
-//	private Set<PaqueteServicio> paqueteServicios;
 }
