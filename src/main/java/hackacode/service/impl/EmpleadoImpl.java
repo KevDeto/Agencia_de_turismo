@@ -8,13 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import hackacode.model.dto.EmpleadoDTO;
 import hackacode.model.entity.Empleado;
-import hackacode.model.repository.IEmpleadoDao;
+import hackacode.model.repository.IEmpleadoRepository;
 import hackacode.service.IEmpleadoService;
 
 @Service
 public class EmpleadoImpl implements IEmpleadoService{
     @Autowired
-    private IEmpleadoDao empleadoDao;
+    private IEmpleadoRepository empleadoRepository;
 
     @Transactional
     @Override
@@ -32,28 +32,28 @@ public class EmpleadoImpl implements IEmpleadoService{
                 .cargo(empleadoDTO.getCargo())
                 .sueldo(empleadoDTO.getSueldo())
                 .build();
-        return empleadoDao.save(cliente);
+        return empleadoRepository.save(cliente);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Empleado findById(Long id) {
-        return empleadoDao.findById(id).orElse(null);
+        return empleadoRepository.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
     public void delete(Empleado empleado) {
-    	empleadoDao.delete(empleado);
+    	empleadoRepository.delete(empleado);
     }
 
     @Override
     public boolean existsById(Long id) {
-        return empleadoDao.existsById(id);
+        return empleadoRepository.existsById(id);
     }
 
     @Override
     public List<Empleado> listAll() {
-        return (List<Empleado>)empleadoDao.findAll();
+        return (List<Empleado>)empleadoRepository.findAll();
     }
 }

@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import hackacode.model.entity.Empleado;
 
-public interface IEmpleadoDao extends JpaRepository<Empleado, Long>{
+public interface IEmpleadoRepository extends JpaRepository<Empleado, Long>{
 
 }

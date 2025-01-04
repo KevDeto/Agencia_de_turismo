@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import hackacode.model.dto.ClienteDTO;
 import hackacode.model.entity.Cliente;
-import hackacode.model.repository.IClienteDao;
+import hackacode.model.repository.IClienteRepository;
 import hackacode.service.IClienteService;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ClienteImpl implements IClienteService {
 
     @Autowired
-    private IClienteDao clienteDao;
+    private IClienteRepository clienteRepository;
 
     @Transactional
     @Override
@@ -31,29 +31,29 @@ public class ClienteImpl implements IClienteService {
                 .fecha_nac(clienteDTO.getFecha_nac())
                 .direccion(clienteDTO.getDireccion())
                 .build();
-        return clienteDao.save(cliente);
+        return clienteRepository.save(cliente);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Cliente findById(Long id) {
-        return clienteDao.findById(id).orElse(null);
+        return clienteRepository.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
     public void delete(Cliente cliente) {
-        clienteDao.delete(cliente);
+        clienteRepository.delete(cliente);
     }
 
     @Override
     public boolean existsById(Long id) {
-        return clienteDao.existsById(id);
+        return clienteRepository.existsById(id);
     }
 
     @Override
     public List<Cliente> listAll() {
-        return (List<Cliente>)clienteDao.findAll();
+        return (List<Cliente>)clienteRepository.findAll();
     }
 
 }
