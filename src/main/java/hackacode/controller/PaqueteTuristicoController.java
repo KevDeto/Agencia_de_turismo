@@ -1,5 +1,6 @@
 package hackacode.controller;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,136 +19,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hackacode.model.dto.ClienteDto;
-import hackacode.model.dto.PaqueteTuristicoDto;
+import hackacode.model.dto.PaqueteTuristicoDTO;
 import hackacode.model.entity.Cliente;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
 import hackacode.model.payload.MensajeResponse;
-import hackacode.service.IPaqueteTuristicoService;
-
-
+import hackacode.service.PaqueteTuristicoService;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/paquetes")
 public class PaqueteTuristicoController {
 
-	@Autowired
-	private IPaqueteTuristicoService paqueteService;
-	
-    @PostMapping("paquete")
-    public ResponseEntity<?> create(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto) {
-        PaqueteTuristico paqueteSave = null;
-        try {
-        	paqueteSave = paqueteService.save(paqueteTuristicoDto);
-            return new ResponseEntity<>(MensajeResponse
-                    .builder()
-                    .mensaje("Guardado correctamente")
-                    .objeto(paqueteTuristicoDto)
-                    .build(),
-                    HttpStatus.CREATED);
-        } catch (DataAccessException exDt) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
-        }
+    @Autowired
+    private PaqueteTuristicoService paqueteService;
+
+    @PostMapping
+    public ResponseEntity<PaqueteTuristicoDTO> crearPaquete(@RequestBody PaqueteTuristicoDTO paqueteDTO) {
+        PaqueteTuristicoDTO nuevoPaquete = paqueteService.crearPaquete(paqueteDTO);
+        return ResponseEntity.ok(nuevoPaquete);
     }
-    
-    @GetMapping("paquete/{id}")
-	public ResponseEntity<?> showById(@PathVariable Long id) {
-		PaqueteTuristico paquete = paqueteService.findById(id);
-		if(paquete == null) {
-			return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("El registro que intenta buscar no existe")
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.NOT_FOUND);
-		}
-		
-	    Set<Long> servicios = paquete.getServicios().stream()
-	            .map(servicio -> servicio.getUUID())
-	            .collect(Collectors.toSet());
-		
-		return new ResponseEntity<>(MensajeResponse.builder()
-                .mensaje("")
-                .objeto(PaqueteTuristicoDto.builder()
-                		.UUID(paquete.getUUID())
-                		.costo_paquete(paquete.getCosto_paquete())
-                		.servicio_turistico(servicios)
-                		.build())
-                .build()
-                ,HttpStatus.OK);		
-	}
-    
-    @GetMapping("paquetes")
-	public ResponseEntity<?> showAll(){
-		List<PaqueteTuristico> getList = paqueteService.listAll();
-		if(getList == null) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("No hay registros")
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.OK);
-		}
-        return new ResponseEntity<>(MensajeResponse.builder()
-                .mensaje("")
-                .objeto(getList)
-                .build(),
-                HttpStatus.OK);
-	}
-    
-    @PutMapping("paquete/{id}")
-	public ResponseEntity<?> update(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto, @PathVariable Long id) {
-		PaqueteTuristico paqueteUpdate = null;
-		try {
-			PaqueteTuristico findPaquete = paqueteService.findById(id);
-			if(paqueteService.existsById(id)) {
-				paqueteTuristicoDto.setUUID(id);
-                paqueteUpdate = paqueteService.save(paqueteTuristicoDto);
-                
-        	    Set<Long> servicios = paqueteUpdate.getServicios().stream()
-        	            .map(servicio -> servicio.getUUID())
-        	            .collect(Collectors.toSet());
-                
-                return new ResponseEntity<>(MensajeResponse
-                        .builder()
-                        .mensaje("Guardado correctamente")
-                        .objeto(PaqueteTuristicoDto.builder()
-                        		.UUID(paqueteUpdate.getUUID())
-                        		.costo_paquete(paqueteUpdate.getCosto_paquete())
-                        		.servicio_turistico(servicios)
-                        		.build())
-                        .build(),
-                        HttpStatus.CREATED);
-			}else {
-                return new ResponseEntity<>(MensajeResponse.builder()
-                        .mensaje("El registro que intenta actualizar no se encuentra en la base de datos")
-                        .objeto(null)
-                        .build(),
-                        HttpStatus.NOT_FOUND);
-            }
-		} catch (DataAccessException exDt) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
-		}
-	}
-    
-	@DeleteMapping("paquete/{id}")
-	public ResponseEntity<?> delete(@PathVariable Long id) {
-		try {
-			PaqueteTuristico paqueteDelete = paqueteService.findById(id);
-			paqueteService.delete(paqueteDelete);
-			return new ResponseEntity<>(paqueteDelete, HttpStatus.NO_CONTENT);
-		} catch (DataAccessException exDt) {
-			return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
-		}
-	}
+
+    @PutMapping("/{codigoPaquete}")
+    public ResponseEntity<PaqueteTuristicoDTO> actualizarPaquete(
+            @PathVariable Long codigoPaquete,
+            @RequestBody PaqueteTuristicoDTO paqueteDTO) {
+        PaqueteTuristicoDTO paqueteActualizado = paqueteService.actualizarPaquete(codigoPaquete, paqueteDTO);
+        return ResponseEntity.ok(paqueteActualizado);
+    }
+
+    @DeleteMapping("/{codigoPaquete}")
+    public ResponseEntity<Void> eliminarPaquete(@PathVariable Long codigoPaquete) {
+        paqueteService.eliminarPaquete(codigoPaquete);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{codigoPaquete}")
+    public ResponseEntity<PaqueteTuristicoDTO> obtenerPaquetePorId(@PathVariable Long codigoPaquete) {
+        PaqueteTuristicoDTO paquete = paqueteService.obtenerPaquetePorId(codigoPaquete);
+        return ResponseEntity.ok(paquete);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PaqueteTuristicoDTO>> listarPaquetes() {
+        List<PaqueteTuristicoDTO> paquetes = paqueteService.listarPaquetes();
+        return ResponseEntity.ok(paquetes);
+    }
 }

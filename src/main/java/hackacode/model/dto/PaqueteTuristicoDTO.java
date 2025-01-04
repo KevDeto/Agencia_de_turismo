@@ -1,5 +1,6 @@
 package hackacode.model.dto;
 
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,11 +10,9 @@ import lombok.Data;
 import lombok.ToString;
 
 @Data
-@ToString
 @Builder
-public class PaqueteTuristicoDto {
-	@JsonIgnore
-	private Long UUID;
-	private double costo_paquete;
-	private Set<Long> servicio_turistico;
+public class PaqueteTuristicoDTO {
+    private Long codigoPaquete;
+    private List<ServicioTuristicoDTO> listaServiciosIncluidos;
+    private Double costoPaquete;
 }

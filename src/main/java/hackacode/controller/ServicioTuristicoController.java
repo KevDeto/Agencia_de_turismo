@@ -18,141 +18,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hackacode.model.dto.ClienteDto;
-import hackacode.model.dto.ServicioTuristicoDto;
+import hackacode.model.dto.ServicioTuristicoDTO;
 import hackacode.model.entity.Cliente;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
 import hackacode.model.payload.MensajeResponse;
-import hackacode.service.IServicioTuristicoService;
+import hackacode.service.ServicioTuristicoService;
 import jakarta.annotation.PostConstruct;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/servicios")
 public class ServicioTuristicoController {
-	
-	@Autowired
-	private IServicioTuristicoService servicioService;
-	
-    @PostMapping("servicio")
-    public ResponseEntity<?> create(@RequestBody ServicioTuristicoDto servicioTuristicoDto) {
-        ServicioTuristico servicioSave = null;
-        try {
-        	servicioSave = servicioService.save(servicioTuristicoDto);
-            return new ResponseEntity<>(MensajeResponse
-                    .builder()
-                    .mensaje("Guardado correctamente")
-                    .objeto(servicioTuristicoDto)
-                    .build(),
-                    HttpStatus.CREATED);
-        } catch (DataAccessException exDt) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
-        }
+
+    @Autowired
+    private ServicioTuristicoService servicioService;
+
+    @PostMapping
+    public ResponseEntity<ServicioTuristicoDTO> crearServicio(@RequestBody ServicioTuristicoDTO servicioDTO) {
+        ServicioTuristicoDTO nuevoServicio = servicioService.crearServicio(servicioDTO);
+        return ResponseEntity.ok(nuevoServicio);
     }
-    
-    @GetMapping("servicios")
-	public ResponseEntity<?> showAll(){
-		List<ServicioTuristico> getList = servicioService.listAll();
-		if(getList == null) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("No hay registros")
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.OK);
-		}
-        return new ResponseEntity<>(MensajeResponse.builder()
-                .mensaje("")
-                .objeto(getList)
-                .build(),
-                HttpStatus.OK);
-	}
-    
-    @GetMapping("servicio/{id}")
-	public ResponseEntity<?> showById(@PathVariable Long id) {
-		ServicioTuristico servicio = servicioService.findById(id);
-		if(servicio == null) {
-			return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("El registro que intenta buscar no existe")
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.NOT_FOUND);
-		}
-		
-	    Set<Long> servicios = servicio.getPaquetes().stream()
-	            .map(paquete -> paquete.getUUID())
-	            .collect(Collectors.toSet());
-		
-		return new ResponseEntity<>(MensajeResponse.builder()
-                .mensaje("")
-                .objeto(ServicioTuristicoDto.builder()
-                		.UUID(servicio.getUUID())
-                		.nombre(servicio.getNombre())
-                		.descripcion(servicio.getDescripcion())
-                		.destino_servicio(servicio.getDestino_servicio())
-                		.costo_servicio(servicio.getCosto_servicio())
-                		.paquete_turistico(servicios)
-                		.build())
-                .build()
-                ,HttpStatus.OK);		
-	}
-    
-    @PutMapping("servicio/{id}")
-	public ResponseEntity<?> update(@RequestBody ServicioTuristicoDto servicioTuristicoDto, @PathVariable Long id) {
-		ServicioTuristico servicioUpdate = null;
-		try {
-			ServicioTuristico findServicio = servicioService.findById(id);
-			if(servicioService.existsById(id)) {
-				servicioTuristicoDto.setUUID(id);
-				servicioUpdate = servicioService.save(servicioTuristicoDto);
-				
-        	    Set<Long> servicios = servicioUpdate.getPaquetes().stream()
-        	            .map(paquete -> paquete.getUUID())
-        	            .collect(Collectors.toSet());
-        	    
-                return new ResponseEntity<>(MensajeResponse
-                        .builder()
-                        .mensaje("Guardado correctamente")
-                        .objeto(ServicioTuristicoDto.builder()
-                        		.UUID(servicioUpdate.getUUID())
-                        		.nombre(servicioUpdate.getNombre())
-                        		.descripcion(servicioUpdate.getDescripcion())
-                        		.destino_servicio(servicioUpdate.getDestino_servicio())
-                        		.costo_servicio(servicioUpdate.getCosto_servicio())
-                        		.paquete_turistico(servicios)
-                        		.build())
-                        .build(),
-                        HttpStatus.CREATED);
-			}else {
-                return new ResponseEntity<>(MensajeResponse.builder()
-                        .mensaje("El registro que intenta actualizar no se encuentra en la base de datos")
-                        .objeto(null)
-                        .build(),
-                        HttpStatus.NOT_FOUND);
-            }
-		} catch (DataAccessException exDt) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
-		}
-	}
-    
-	@DeleteMapping("servicio/{id}")
-	public ResponseEntity<?> delete(@PathVariable Long id) {
-		try {
-			ServicioTuristico servicioDelete = servicioService.findById(id);
-			servicioService.delete(servicioDelete);
-			return new ResponseEntity<>(servicioDelete, HttpStatus.NO_CONTENT);
-		} catch (DataAccessException exDt) {
-			return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
-		}
-	}
+
+    @PutMapping("/{codigoServicio}")
+    public ResponseEntity<ServicioTuristicoDTO> actualizarServicio(
+            @PathVariable Long codigoServicio,
+            @RequestBody ServicioTuristicoDTO servicioDTO) {
+        ServicioTuristicoDTO servicioActualizado = servicioService.actualizarServicio(codigoServicio, servicioDTO);
+        return ResponseEntity.ok(servicioActualizado);
+    }
+
+    @DeleteMapping("/{codigoServicio}")
+    public ResponseEntity<Void> eliminarServicio(@PathVariable Long codigoServicio) {
+        servicioService.eliminarServicio(codigoServicio);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{codigoServicio}")
+    public ResponseEntity<ServicioTuristicoDTO> obtenerServicioPorId(@PathVariable Long codigoServicio) {
+        ServicioTuristicoDTO servicio = servicioService.obtenerServicioPorId(codigoServicio);
+        return ResponseEntity.ok(servicio);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ServicioTuristicoDTO>> listarServicios() {
+        List<ServicioTuristicoDTO> servicios = servicioService.listarServicios();
+        return ResponseEntity.ok(servicios);
+    }
 }
