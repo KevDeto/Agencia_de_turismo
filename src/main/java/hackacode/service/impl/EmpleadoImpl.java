@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hackacode.model.dao.IEmpleadoDao;
-import hackacode.model.dto.EmpleadoDto;
+import hackacode.model.dto.EmpleadoDTO;
 import hackacode.model.entity.Empleado;
+import hackacode.model.repository.IEmpleadoDao;
 import hackacode.service.IEmpleadoService;
 
 @Service
@@ -18,19 +18,19 @@ public class EmpleadoImpl implements IEmpleadoService{
 
     @Transactional
     @Override
-    public Empleado save(EmpleadoDto empleadoDto) {
+    public Empleado save(EmpleadoDTO empleadoDTO) {
     	Empleado cliente = Empleado.builder()
-                .UUID(empleadoDto.getUUID())
-                .nombre(empleadoDto.getNombre())
-                .apellido(empleadoDto.getApellido())
-                .dni(empleadoDto.getDni())
-                .nacionalidad(empleadoDto.getNacionalidad())
-                .email(empleadoDto.getEmail())
-                .celular(empleadoDto.getCelular())
-                .fecha_nac(empleadoDto.getFecha_nac())
-                .direccion(empleadoDto.getDireccion())
-                .cargo(empleadoDto.getCargo())
-                .sueldo(empleadoDto.getSueldo())
+                .UUID(empleadoDTO.getUUID())
+                .nombre(empleadoDTO.getNombre())
+                .apellido(empleadoDTO.getApellido())
+                .dni(empleadoDTO.getDni())
+                .nacionalidad(empleadoDTO.getNacionalidad())
+                .email(empleadoDTO.getEmail())
+                .celular(empleadoDTO.getCelular())
+                .fecha_nac(empleadoDTO.getFecha_nac())
+                .direccion(empleadoDTO.getDireccion())
+                .cargo(empleadoDTO.getCargo())
+                .sueldo(empleadoDTO.getSueldo())
                 .build();
         return empleadoDao.save(cliente);
     }

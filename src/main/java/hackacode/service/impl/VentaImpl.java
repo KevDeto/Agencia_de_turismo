@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hackacode.model.dao.IClienteDao;
-import hackacode.model.dao.IVentaDao;
 import hackacode.model.dto.VentaDto;
 import hackacode.model.entity.Venta;
+import hackacode.model.repository.IClienteDao;
+import hackacode.model.repository.IVentaDao;
 import hackacode.service.IVentaService;
 
 @Service

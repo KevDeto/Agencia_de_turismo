@@ -12,7 +12,7 @@ import lombok.ToString;
 @Data
 @ToString
 @Builder
-public class ClienteDto implements Serializable {
+public class ClienteDTO implements Serializable {
 
 	@JsonIgnore
     private Long UUID;

@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hackacode.model.dao.IClienteDao;
-import hackacode.model.dto.ClienteDto;
+import hackacode.model.dto.ClienteDTO;
 import hackacode.model.entity.Cliente;
+import hackacode.model.repository.IClienteDao;
 import hackacode.service.IClienteService;
 
 import java.util.List;
@@ -19,17 +19,17 @@ public class ClienteImpl implements IClienteService {
 
     @Transactional
     @Override
-    public Cliente save(ClienteDto clienteDto) {
+    public Cliente save(ClienteDTO clienteDTO) {
         Cliente cliente = Cliente.builder()
-                .UUID(clienteDto.getUUID())
-                .nombre(clienteDto.getNombre())
-                .apellido(clienteDto.getApellido())
-                .dni(clienteDto.getDni())
-                .nacionalidad(clienteDto.getNacionalidad())
-                .email(clienteDto.getEmail())
-                .celular(clienteDto.getCelular())
-                .fecha_nac(clienteDto.getFecha_nac())
-                .direccion(clienteDto.getDireccion())
+                .UUID(clienteDTO.getUUID())
+                .nombre(clienteDTO.getNombre())
+                .apellido(clienteDTO.getApellido())
+                .dni(clienteDTO.getDni())
+                .nacionalidad(clienteDTO.getNacionalidad())
+                .email(clienteDTO.getEmail())
+                .celular(clienteDTO.getCelular())
+                .fecha_nac(clienteDTO.getFecha_nac())
+                .direccion(clienteDTO.getDireccion())
                 .build();
         return clienteDao.save(cliente);
     }
