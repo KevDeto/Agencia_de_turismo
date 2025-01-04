@@ -23,7 +23,7 @@ import hackacode.model.entity.Cliente;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
 import hackacode.model.payload.MensajeResponse;
-import hackacode.service.ServicioTuristicoService;
+import hackacode.service.IServicioTuristicoService;
 import jakarta.annotation.PostConstruct;
 
 @RestController
@@ -31,7 +31,7 @@ import jakarta.annotation.PostConstruct;
 public class ServicioTuristicoController {
 
     @Autowired
-    private ServicioTuristicoService servicioService;
+    private IServicioTuristicoService servicioService;
 
     @PostMapping
     public ResponseEntity<ServicioTuristicoDTO> crearServicio(@RequestBody ServicioTuristicoDTO servicioDTO) {

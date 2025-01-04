@@ -13,10 +13,10 @@ import hackacode.model.dto.ServicioTuristicoDTO;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
 import hackacode.model.repository.ServicioTuristicoRepository;
-import hackacode.service.ServicioTuristicoService;
+import hackacode.service.IServicioTuristicoService;
 
 @Service
-public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
+public class ServicioTuristicoServiceImpl implements IServicioTuristicoService {
 
     @Autowired
     private ServicioTuristicoRepository servicioRepository;
