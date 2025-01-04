@@ -17,7 +17,10 @@ import hackacode.model.entity.ServicioTuristico;
 import hackacode.model.repository.PaqueteTuristicoRepository;
 import hackacode.model.repository.ServicioTuristicoRepository;
 import hackacode.service.IPaqueteTuristicoService;
+<<<<<<< HEAD
 import hackacode.utils.RelacionadorServicios;
+=======
+>>>>>>> pruebas2
 
 @Service
 public class PaqueteTuristicoServiceImpl implements IPaqueteTuristicoService {

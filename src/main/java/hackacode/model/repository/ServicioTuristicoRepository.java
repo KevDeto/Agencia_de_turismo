@@ -7,5 +7,4 @@ import hackacode.model.entity.ServicioTuristico;
 
 @Repository
 public interface ServicioTuristicoRepository extends JpaRepository<ServicioTuristico, Long> {
-    // Puedes añadir consultas personalizadas aquí si es necesario.
 }

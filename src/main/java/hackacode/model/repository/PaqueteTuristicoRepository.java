@@ -10,5 +10,4 @@ import hackacode.model.entity.PaqueteTuristico;
 
 @Repository
 public interface PaqueteTuristicoRepository extends JpaRepository<PaqueteTuristico, Long> {
-    // Puedes añadir consultas personalizadas aquí si es necesario.
 }
