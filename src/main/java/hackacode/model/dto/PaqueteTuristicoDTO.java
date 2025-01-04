@@ -5,14 +5,10 @@ import java.util.Set;
 
 =======
 import java.util.List;
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 >>>>>>> pruebas2
 import lombok.Builder;
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 <<<<<<< HEAD
