@@ -2,6 +2,8 @@ package hackacode.model.dto;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,6 +11,7 @@ import lombok.Data;
 @Builder
 public class VentaDto {
 	
+	@JsonIgnore
 	private Long UUID;	
 	private Date fecha_venta;
 	private double monto_total;

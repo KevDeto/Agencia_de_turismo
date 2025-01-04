@@ -3,6 +3,8 @@ package hackacode.model.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -12,6 +14,7 @@ import lombok.ToString;
 @Builder
 public class EmpleadoDto implements Serializable{
 	
+	@JsonIgnore
     private Long UUID;
 	private String nombre;
 	private String apellido;
