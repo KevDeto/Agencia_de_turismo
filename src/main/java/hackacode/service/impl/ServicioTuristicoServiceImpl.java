@@ -9,15 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hackacode.model.dao.ServicioTuristicoRepository;
 import hackacode.model.dto.ServicioTuristicoDTO;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
-import hackacode.service.ServicioTuristicoService;
+import hackacode.model.repository.ServicioTuristicoRepository;
+import hackacode.service.IServicioTuristicoService;
 import hackacode.utils.RelacionadorPaquetes;
 
 @Service
-public class ServicioTuristicoServiceImpl implements ServicioTuristicoService {
+public class ServicioTuristicoServiceImpl implements IServicioTuristicoService {
 
     @Autowired
     private ServicioTuristicoRepository servicioRepository;

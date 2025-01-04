@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackacode.model.dto.EmpleadoDto;
+import hackacode.model.dto.EmpleadoDTO;
 import hackacode.model.entity.Empleado;
 import hackacode.model.payload.MensajeResponse;
 import hackacode.service.IEmpleadoService;
@@ -45,14 +45,14 @@ public class EmpleadoController {
     }
 
     @PostMapping("empleado")
-    public ResponseEntity<?> create(@RequestBody EmpleadoDto empleadoDto) {
+    public ResponseEntity<?> create(@RequestBody EmpleadoDTO empleadoDTO) {
         Empleado empleadoSave = null;
         try {
-        	empleadoSave = empleadoService.save(empleadoDto);
+        	empleadoSave = empleadoService.save(empleadoDTO);
             return new ResponseEntity<>(MensajeResponse
                     .builder()
                     .mensaje("Guardado correctamente")
-                    .objeto(empleadoDto)
+                    .objeto(empleadoDTO)
                     .build(),
                     HttpStatus.CREATED);
         } catch (DataAccessException exDt) {
@@ -65,18 +65,18 @@ public class EmpleadoController {
     }
 
     @PutMapping("empleado/{id}")
-    public ResponseEntity<?> update(@RequestBody EmpleadoDto empleadoDto, @PathVariable Long id) {
+    public ResponseEntity<?> update(@RequestBody EmpleadoDTO empleadoDTO, @PathVariable Long id) {
         Empleado empleadoUpdate = null;
         try {
         	Empleado findCliente = empleadoService.findById(id);
             if (empleadoService.existsById(id)) {
-            	empleadoDto.setUUID(id);
-            	empleadoUpdate = empleadoService.save(empleadoDto);
+            	empleadoDTO.setUUID(id);
+            	empleadoUpdate = empleadoService.save(empleadoDTO);
 
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
                         .mensaje("Guardado correctamente")
-                        .objeto(EmpleadoDto.builder()
+                        .objeto(EmpleadoDTO.builder()
                                 .UUID(empleadoUpdate.getUUID())
                                 .nombre(empleadoUpdate.getNombre())
                                 .apellido(empleadoUpdate.getApellido())
@@ -136,7 +136,7 @@ public class EmpleadoController {
         }
         return new ResponseEntity<>(MensajeResponse.builder()
                 .mensaje("")
-                .objeto(EmpleadoDto.builder()
+                .objeto(EmpleadoDTO.builder()
                         .UUID(empleado.getUUID())
                         .nombre(empleado.getNombre())
                         .apellido(empleado.getApellido())

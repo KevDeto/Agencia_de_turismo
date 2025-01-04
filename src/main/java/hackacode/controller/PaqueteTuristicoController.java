@@ -18,20 +18,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackacode.model.dto.ClienteDto;
+import hackacode.model.dto.ClienteDTO;
 import hackacode.model.dto.PaqueteTuristicoDTO;
 import hackacode.model.entity.Cliente;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
 import hackacode.model.payload.MensajeResponse;
-import hackacode.service.PaqueteTuristicoService;
+import hackacode.service.IPaqueteTuristicoService;
 
 @RestController
 @RequestMapping("/api/paquetes")
 public class PaqueteTuristicoController {
 
     @Autowired
-    private PaqueteTuristicoService paqueteService;
+    private IPaqueteTuristicoService paqueteService;
 
     @PostMapping
     public ResponseEntity<PaqueteTuristicoDTO> crearPaquete(@RequestBody PaqueteTuristicoDTO paqueteDTO) {

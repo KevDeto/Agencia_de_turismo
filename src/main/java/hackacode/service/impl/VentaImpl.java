@@ -6,53 +6,53 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hackacode.model.dao.IClienteDao;
-import hackacode.model.dao.IVentaDao;
-import hackacode.model.dto.VentaDto;
+import hackacode.model.dto.VentaDTO;
 import hackacode.model.entity.Venta;
+import hackacode.model.repository.IClienteRepository;
+import hackacode.model.repository.IVentaRepository;
 import hackacode.service.IVentaService;
 
 @Service
 public class VentaImpl implements IVentaService{
 	
 	@Autowired
-	private IVentaDao ventaDao;
+	private IVentaRepository ventaRepository;
 	@Autowired
-	private IClienteDao clienteDao;
+	private IClienteRepository clienteRepository;
 
 	@Override
 	public List<Venta> listAll() {
-		return (List<Venta>)ventaDao.findAll();
+		return (List<Venta>)ventaRepository.findAll();
 	}
 
 	@Transactional
 	@Override
-	public Venta save(VentaDto ventaDto) {
+	public Venta save(VentaDTO ventaDTO) {
 		Venta venta = Venta.builder()
-	            .UUID(ventaDto.getUUID())
-	            .fecha_venta(ventaDto.getFecha_venta())
-	            .monto_total(ventaDto.getMonto_total())
-	            .cliente(clienteDao.findById(ventaDto.getCliente_uuid())
+	            .UUID(ventaDTO.getUUID())
+	            .fecha_venta(ventaDTO.getFecha_venta())
+	            .monto_total(ventaDTO.getMonto_total())
+	            .cliente(clienteRepository.findById(ventaDTO.getCliente_uuid())
 	                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado")))
 	            .build();
-		return ventaDao.save(venta);
+		return ventaRepository.save(venta);
 	}
 	
 	@Transactional(readOnly = true)
 	@Override
 	public Venta findById(Long id) {
-		return ventaDao.findById(id).orElse(null);
+		return ventaRepository.findById(id).orElse(null);
 	}
 
 	@Transactional
 	@Override
 	public void delete(Venta venta) {
-		ventaDao.delete(venta);
+		ventaRepository.delete(venta);
 	}
 
 	@Override
 	public boolean existsById(Long id) {
-		return ventaDao.existsById(id);
+		return ventaRepository.existsById(id);
 	}
 
 }

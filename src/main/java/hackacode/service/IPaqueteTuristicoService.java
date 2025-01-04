@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import hackacode.model.dto.PaqueteTuristicoDTO;
 import hackacode.model.entity.PaqueteTuristico;
 
-public interface PaqueteTuristicoService {
+public interface IPaqueteTuristicoService {
     PaqueteTuristicoDTO crearPaquete(PaqueteTuristicoDTO paqueteDTO);
     PaqueteTuristicoDTO actualizarPaquete(Long codigoPaquete, PaqueteTuristicoDTO paqueteDTO);
     void eliminarPaquete(Long codigoPaquete);

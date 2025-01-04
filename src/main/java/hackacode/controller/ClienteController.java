@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackacode.model.dto.ClienteDto;
+import hackacode.model.dto.ClienteDTO;
 import hackacode.model.entity.Cliente;
 import hackacode.model.payload.MensajeResponse;
 import hackacode.service.IClienteService;
@@ -45,14 +45,14 @@ public class ClienteController {
     }
 
     @PostMapping("cliente")
-    public ResponseEntity<?> create(@RequestBody ClienteDto clienteDto) {
+    public ResponseEntity<?> create(@RequestBody ClienteDTO clienteDTO) {
         Cliente clienteSave = null;
         try {
-            clienteSave = clienteService.save(clienteDto);
+            clienteSave = clienteService.save(clienteDTO);
             return new ResponseEntity<>(MensajeResponse
                     .builder()
                     .mensaje("Guardado correctamente")
-                    .objeto(clienteDto)
+                    .objeto(clienteDTO)
                     .build(),
                     HttpStatus.CREATED);
         } catch (DataAccessException exDt) {
@@ -65,18 +65,18 @@ public class ClienteController {
     }
 
     @PutMapping("cliente/{id}")
-    public ResponseEntity<?> update(@RequestBody ClienteDto clienteDto, @PathVariable Long id) {
+    public ResponseEntity<?> update(@RequestBody ClienteDTO clienteDTO, @PathVariable Long id) {
         Cliente clienteUpdate = null;
         try {
             Cliente findCliente = clienteService.findById(id);
             if (clienteService.existsById(id)) {
-                clienteDto.setUUID(id);
-                clienteUpdate = clienteService.save(clienteDto);
+                clienteDTO.setUUID(id);
+                clienteUpdate = clienteService.save(clienteDTO);
 
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
                         .mensaje("Guardado correctamente")
-                        .objeto(ClienteDto.builder()
+                        .objeto(ClienteDTO.builder()
                                 .UUID(clienteUpdate.getUUID())
                                 .nombre(clienteUpdate.getNombre())
                                 .apellido(clienteUpdate.getApellido())
@@ -134,7 +134,7 @@ public class ClienteController {
         }
         return new ResponseEntity<>(MensajeResponse.builder()
                 .mensaje("")
-                .objeto(ClienteDto.builder()
+                .objeto(ClienteDTO.builder()
                         .UUID(cliente.getUUID())
                         .nombre(cliente.getNombre())
                         .apellido(cliente.getApellido())

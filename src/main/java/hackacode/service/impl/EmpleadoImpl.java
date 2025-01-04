@@ -6,54 +6,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hackacode.model.dao.IEmpleadoDao;
-import hackacode.model.dto.EmpleadoDto;
+import hackacode.model.dto.EmpleadoDTO;
 import hackacode.model.entity.Empleado;
+import hackacode.model.repository.IEmpleadoRepository;
 import hackacode.service.IEmpleadoService;
 
 @Service
 public class EmpleadoImpl implements IEmpleadoService{
     @Autowired
-    private IEmpleadoDao empleadoDao;
+    private IEmpleadoRepository empleadoRepository;
 
     @Transactional
     @Override
-    public Empleado save(EmpleadoDto empleadoDto) {
+    public Empleado save(EmpleadoDTO empleadoDTO) {
     	Empleado cliente = Empleado.builder()
-                .UUID(empleadoDto.getUUID())
-                .nombre(empleadoDto.getNombre())
-                .apellido(empleadoDto.getApellido())
-                .dni(empleadoDto.getDni())
-                .nacionalidad(empleadoDto.getNacionalidad())
-                .email(empleadoDto.getEmail())
-                .celular(empleadoDto.getCelular())
-                .fecha_nac(empleadoDto.getFecha_nac())
-                .direccion(empleadoDto.getDireccion())
-                .cargo(empleadoDto.getCargo())
-                .sueldo(empleadoDto.getSueldo())
+                .UUID(empleadoDTO.getUUID())
+                .nombre(empleadoDTO.getNombre())
+                .apellido(empleadoDTO.getApellido())
+                .dni(empleadoDTO.getDni())
+                .nacionalidad(empleadoDTO.getNacionalidad())
+                .email(empleadoDTO.getEmail())
+                .celular(empleadoDTO.getCelular())
+                .fecha_nac(empleadoDTO.getFecha_nac())
+                .direccion(empleadoDTO.getDireccion())
+                .cargo(empleadoDTO.getCargo())
+                .sueldo(empleadoDTO.getSueldo())
                 .build();
-        return empleadoDao.save(cliente);
+        return empleadoRepository.save(cliente);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Empleado findById(Long id) {
-        return empleadoDao.findById(id).orElse(null);
+        return empleadoRepository.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
     public void delete(Empleado empleado) {
-    	empleadoDao.delete(empleado);
+    	empleadoRepository.delete(empleado);
     }
 
     @Override
     public boolean existsById(Long id) {
-        return empleadoDao.existsById(id);
+        return empleadoRepository.existsById(id);
     }
 
     @Override
     public List<Empleado> listAll() {
-        return (List<Empleado>)empleadoDao.findAll();
+        return (List<Empleado>)empleadoRepository.findAll();
     }
 }
