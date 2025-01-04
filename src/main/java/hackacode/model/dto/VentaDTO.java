@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class VentaDto {
+public class VentaDTO {
 	
 	@JsonIgnore
 	private Long UUID;	
