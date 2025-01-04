@@ -24,23 +24,23 @@ import hackacode.model.entity.Cliente;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
 import hackacode.model.payload.MensajeResponse;
-import hackacode.service.ServicioTuristicoService;
+import hackacode.service.IServicioTuristicoService;
 import jakarta.annotation.PostConstruct;
 
 @RestController
-@RequestMapping("/api/servicios")
+@RequestMapping("/api/v1")
 public class ServicioTuristicoController {
 
     @Autowired
-    private ServicioTuristicoService servicioService;
+    private IServicioTuristicoService servicioService;
 
-    @PostMapping
+    @PostMapping("/servicio")
     public ResponseEntity<ServicioTuristicoDTO> crearServicio(@RequestBody ServicioTuristicoDTO servicioDTO) {
         ServicioTuristicoDTO nuevoServicio = servicioService.crearServicio(servicioDTO);
         return ResponseEntity.ok(nuevoServicio);
     }
 
-    @PutMapping("/{codigoServicio}")
+    @PutMapping("servicio/{codigoServicio}")
     public ResponseEntity<ServicioTuristicoDTO> actualizarServicio(
             @PathVariable Long codigoServicio,
             @RequestBody ServicioTuristicoDTO servicioDTO) {
@@ -48,19 +48,19 @@ public class ServicioTuristicoController {
         return ResponseEntity.ok(servicioActualizado);
     }
 
-    @DeleteMapping("/{codigoServicio}")
+    @DeleteMapping("servicio/{codigoServicio}")
     public ResponseEntity<Void> eliminarServicio(@PathVariable Long codigoServicio) {
         servicioService.eliminarServicio(codigoServicio);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{codigoServicio}")
+    @GetMapping("servicio/{codigoServicio}")
     public ResponseEntity<ServicioTuristicoDTO> obtenerServicioPorId(@PathVariable Long codigoServicio) {
         ServicioTuristicoDTO servicio = servicioService.obtenerServicioPorId(codigoServicio);
         return ResponseEntity.ok(servicio);
     }
 
-    @GetMapping
+    @GetMapping("/servicios")
     public ResponseEntity<List<ServicioTuristicoDTO>> listarServicios() {
         List<ServicioTuristicoDTO> servicios = servicioService.listarServicios();
         return ResponseEntity.ok(servicios);

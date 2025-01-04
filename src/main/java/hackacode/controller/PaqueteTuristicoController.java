@@ -24,22 +24,22 @@ import hackacode.model.entity.Cliente;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
 import hackacode.model.payload.MensajeResponse;
-import hackacode.service.PaqueteTuristicoService;
+import hackacode.service.IPaqueteTuristicoService;
 
 @RestController
-@RequestMapping("/api/paquetes")
+@RequestMapping("/api/v1")
 public class PaqueteTuristicoController {
 
     @Autowired
-    private PaqueteTuristicoService paqueteService;
+    private IPaqueteTuristicoService paqueteService;
 
-    @PostMapping
+    @PostMapping("paquetes")
     public ResponseEntity<PaqueteTuristicoDTO> crearPaquete(@RequestBody PaqueteTuristicoDTO paqueteDTO) {
         PaqueteTuristicoDTO nuevoPaquete = paqueteService.crearPaquete(paqueteDTO);
         return ResponseEntity.ok(nuevoPaquete);
     }
 
-    @PutMapping("/{codigoPaquete}")
+    @PutMapping("paquete/{codigoPaquete}")
     public ResponseEntity<PaqueteTuristicoDTO> actualizarPaquete(
             @PathVariable Long codigoPaquete,
             @RequestBody PaqueteTuristicoDTO paqueteDTO) {
@@ -47,19 +47,19 @@ public class PaqueteTuristicoController {
         return ResponseEntity.ok(paqueteActualizado);
     }
 
-    @DeleteMapping("/{codigoPaquete}")
+    @DeleteMapping("paquete/{codigoPaquete}")
     public ResponseEntity<Void> eliminarPaquete(@PathVariable Long codigoPaquete) {
         paqueteService.eliminarPaquete(codigoPaquete);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{codigoPaquete}")
+    @GetMapping("paquete/{codigoPaquete}")
     public ResponseEntity<PaqueteTuristicoDTO> obtenerPaquetePorId(@PathVariable Long codigoPaquete) {
         PaqueteTuristicoDTO paquete = paqueteService.obtenerPaquetePorId(codigoPaquete);
         return ResponseEntity.ok(paquete);
     }
 
-    @GetMapping
+    @GetMapping("paquetes")
     public ResponseEntity<List<PaqueteTuristicoDTO>> listarPaquetes() {
         List<PaqueteTuristicoDTO> paquetes = paqueteService.listarPaquetes();
         return ResponseEntity.ok(paquetes);

@@ -5,7 +5,7 @@ import java.util.List;
 import hackacode.model.dto.ServicioTuristicoDTO;
 import hackacode.model.entity.ServicioTuristico;
 
-public interface ServicioTuristicoService {
+public interface IServicioTuristicoService {
     ServicioTuristicoDTO crearServicio(ServicioTuristicoDTO servicioDTO);
     ServicioTuristicoDTO actualizarServicio(Long codigoServicio, ServicioTuristicoDTO servicioDTO);
     void eliminarServicio(Long codigoServicio);
