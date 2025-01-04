@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hackacode.model.dto.VentaDto;
+import hackacode.model.dto.VentaDTO;
 import hackacode.model.entity.Venta;
 import hackacode.model.payload.MensajeResponse;
 import hackacode.service.IVentaService;
@@ -45,13 +45,13 @@ public class VentaController {
 	}
 	
 	@PostMapping("venta")
-	public ResponseEntity<?> create(@RequestBody VentaDto ventaDto){
+	public ResponseEntity<?> create(@RequestBody VentaDTO ventaDTO){
 		Venta ventaSave = null;
         try {
-        	ventaSave = ventaService.save(ventaDto);
+        	ventaSave = ventaService.save(ventaDTO);
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("Guardado correctamente")
-                    .objeto(ventaDto)
+                    .objeto(ventaDTO)
                     .build(),
                     HttpStatus.CREATED);
 		} catch (DataAccessException exDt) {
@@ -64,17 +64,17 @@ public class VentaController {
 	}
 	
 	@PutMapping("venta/{id}")
-	public ResponseEntity<?> update(@RequestBody VentaDto ventaDto, @PathVariable Long id) {
+	public ResponseEntity<?> update(@RequestBody VentaDTO ventaDTO, @PathVariable Long id) {
 		Venta ventaUpdate = null;
 		try {
 			Venta findVenta = ventaService.findById(id);
 			if(ventaService.existsById(id)) {
-                ventaDto.setUUID(id);
-                ventaUpdate = ventaService.save(ventaDto);
+                ventaDTO.setUUID(id);
+                ventaUpdate = ventaService.save(ventaDTO);
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
                         .mensaje("Guardado correctamente")
-                        .objeto(VentaDto.builder()
+                        .objeto(VentaDTO.builder()
                         		.UUID(ventaUpdate.getUUID())
                         		.fecha_venta(ventaUpdate.getFecha_venta())
                         		.monto_total(ventaUpdate.getMonto_total())
@@ -125,7 +125,7 @@ public class VentaController {
 		}
 		return new ResponseEntity<>(MensajeResponse.builder()
                 .mensaje("")
-                .objeto(VentaDto.builder()
+                .objeto(VentaDTO.builder()
                 		.UUID(venta.getUUID())
                 		.fecha_venta(venta.getFecha_venta())
                 		.monto_total(venta.getMonto_total())

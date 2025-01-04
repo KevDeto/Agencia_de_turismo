@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hackacode.model.dto.VentaDto;
+import hackacode.model.dto.VentaDTO;
 import hackacode.model.entity.Venta;
 import hackacode.model.repository.IClienteDao;
 import hackacode.model.repository.IVentaDao;
@@ -27,12 +27,12 @@ public class VentaImpl implements IVentaService{
 
 	@Transactional
 	@Override
-	public Venta save(VentaDto ventaDto) {
+	public Venta save(VentaDTO ventaDTO) {
 		Venta venta = Venta.builder()
-	            .UUID(ventaDto.getUUID())
-	            .fecha_venta(ventaDto.getFecha_venta())
-	            .monto_total(ventaDto.getMonto_total())
-	            .cliente(clienteDao.findById(ventaDto.getCliente_uuid())
+	            .UUID(ventaDTO.getUUID())
+	            .fecha_venta(ventaDTO.getFecha_venta())
+	            .monto_total(ventaDTO.getMonto_total())
+	            .cliente(clienteDao.findById(ventaDTO.getCliente_uuid())
 	                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado")))
 	            .build();
 		return ventaDao.save(venta);
