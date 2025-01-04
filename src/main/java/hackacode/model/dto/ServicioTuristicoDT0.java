@@ -10,7 +10,7 @@ import lombok.ToString;
 @Data
 @ToString
 @Builder
-public class ServicioTuristicoDto {
+public class ServicioTuristicoDT0 {
 	private Long UUID;
 	private String nombre;
 	private String descripcion;

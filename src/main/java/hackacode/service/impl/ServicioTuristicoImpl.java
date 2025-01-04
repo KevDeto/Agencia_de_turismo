@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hackacode.model.dao.IServicioTuristicoDao;
-import hackacode.model.dto.ServicioTuristicoDto;
+import hackacode.model.dto.ServicioTuristicoDT0;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
 import hackacode.service.IServicioTuristicoService;
@@ -24,18 +24,18 @@ public class ServicioTuristicoImpl implements IServicioTuristicoService{
 
 	@Transactional
 	@Override
-	public ServicioTuristico save(ServicioTuristicoDto servicioTuristicoDto) {
+	public ServicioTuristico save(ServicioTuristicoDT0 servicioTuristicoDT0) {
 		//esto me da los paquetes segun el id que ponga en el json
     	Set<PaqueteTuristico> paquete = relacionadorPaquetes
-    			.obtenerPaquetesRelacionados(servicioTuristicoDto.getPaquete_turistico());
+    			.obtenerPaquetesRelacionados(servicioTuristicoDT0.getPaquete_turistico());
 
     	ServicioTuristico servicioSave = ServicioTuristico.builder()
-	            .UUID(servicioTuristicoDto.getUUID())
-	            .nombre(servicioTuristicoDto.getNombre())
-	            .descripcion(servicioTuristicoDto.getDescripcion())
-	            .destino_servicio(servicioTuristicoDto.getDestino_servicio())
-	            .fecha_servicio(servicioTuristicoDto.getFecha_servicio())
-	            .costo_servicio(servicioTuristicoDto.getCosto_servicio())
+	            .UUID(servicioTuristicoDT0.getUUID())
+	            .nombre(servicioTuristicoDT0.getNombre())
+	            .descripcion(servicioTuristicoDT0.getDescripcion())
+	            .destino_servicio(servicioTuristicoDT0.getDestino_servicio())
+	            .fecha_servicio(servicioTuristicoDT0.getFecha_servicio())
+	            .costo_servicio(servicioTuristicoDT0.getCosto_servicio())
 	            .paquetes(paquete)
 				.build();
 		return servicioTuristicoDao.save(servicioSave);

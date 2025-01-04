@@ -9,7 +9,7 @@ import lombok.ToString;
 @Data
 @ToString
 @Builder
-public class PaqueteTuristicoDto {
+public class PaqueteTuristicoDTO {
 	private Long UUID;
 	private double costo_paquete;
 	private Set<Long> servicio_turistico;

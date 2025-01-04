@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hackacode.model.dto.ClienteDto;
-import hackacode.model.dto.PaqueteTuristicoDto;
+import hackacode.model.dto.PaqueteTuristicoDTO;
 import hackacode.model.entity.Cliente;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
@@ -35,14 +35,14 @@ public class PaqueteTuristicoController {
 	private IPaqueteTuristicoService paqueteService;
 	
     @PostMapping("paquete")
-    public ResponseEntity<?> create(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto) {
+    public ResponseEntity<?> create(@RequestBody PaqueteTuristicoDTO paqueteTuristicoDTO) {
         PaqueteTuristico paqueteSave = null;
         try {
-        	paqueteSave = paqueteService.save(paqueteTuristicoDto);
+        	paqueteSave = paqueteService.save(paqueteTuristicoDTO);
             return new ResponseEntity<>(MensajeResponse
                     .builder()
                     .mensaje("Guardado correctamente")
-                    .objeto(paqueteTuristicoDto)
+                    .objeto(paqueteTuristicoDTO)
                     .build(),
                     HttpStatus.CREATED);
         } catch (DataAccessException exDt) {
@@ -71,7 +71,7 @@ public class PaqueteTuristicoController {
 		
 		return new ResponseEntity<>(MensajeResponse.builder()
                 .mensaje("")
-                .objeto(PaqueteTuristicoDto.builder()
+                .objeto(PaqueteTuristicoDTO.builder()
                 		.UUID(paquete.getUUID())
                 		.costo_paquete(paquete.getCosto_paquete())
                 		.servicio_turistico(servicios)
@@ -98,13 +98,13 @@ public class PaqueteTuristicoController {
 	}
     
     @PutMapping("paquete/{id}")
-	public ResponseEntity<?> update(@RequestBody PaqueteTuristicoDto paqueteTuristicoDto, @PathVariable Long id) {
+	public ResponseEntity<?> update(@RequestBody PaqueteTuristicoDTO paqueteTuristicoDTO, @PathVariable Long id) {
 		PaqueteTuristico paqueteUpdate = null;
 		try {
 			PaqueteTuristico findVenta = paqueteService.findById(id);
 			if(paqueteService.existsById(id)) {
-				paqueteTuristicoDto.setUUID(id);
-                paqueteUpdate = paqueteService.save(paqueteTuristicoDto);
+				paqueteTuristicoDTO.setUUID(id);
+                paqueteUpdate = paqueteService.save(paqueteTuristicoDTO);
                 
         	    Set<Long> servicios = paqueteUpdate.getServicios().stream()
         	            .map(servicio -> servicio.getUUID())
@@ -113,7 +113,7 @@ public class PaqueteTuristicoController {
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
                         .mensaje("Guardado correctamente")
-                        .objeto(PaqueteTuristicoDto.builder()
+                        .objeto(PaqueteTuristicoDTO.builder()
                         		.UUID(paqueteUpdate.getUUID())
                         		.costo_paquete(paqueteUpdate.getCosto_paquete())
                         		.servicio_turistico(servicios)
