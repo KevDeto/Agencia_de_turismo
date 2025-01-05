@@ -79,6 +79,7 @@ public class VentaController {
                         		.fecha_venta(ventaUpdate.getFecha_venta())
                         		.monto_total(ventaUpdate.getMonto_total())
                         		.cliente_uuid(ventaUpdate.getCliente().getUUID())
+                        		.empleado_uuid(ventaUpdate.getEmpleado().getUUID())
                         		.build())
                         .build(),
                         HttpStatus.CREATED);
@@ -130,6 +131,7 @@ public class VentaController {
                 		.fecha_venta(venta.getFecha_venta())
                 		.monto_total(venta.getMonto_total())
                 		.cliente_uuid(venta.getCliente().getUUID())
+                		.empleado_uuid(venta.getEmpleado().getUUID())
                 		.build())
                 .build()
                 ,HttpStatus.OK);		
