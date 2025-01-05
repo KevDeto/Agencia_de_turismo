@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import hackacode.model.dto.VentaDTO;
 import hackacode.model.entity.Venta;
 import hackacode.model.repository.IClienteRepository;
+import hackacode.model.repository.IEmpleadoRepository;
 import hackacode.model.repository.IVentaRepository;
 import hackacode.service.IVentaService;
 
@@ -19,6 +20,8 @@ public class VentaImpl implements IVentaService{
 	private IVentaRepository ventaRepository;
 	@Autowired
 	private IClienteRepository clienteRepository;
+	@Autowired
+	private IEmpleadoRepository empleadoRepository;
 
 	@Override
 	public List<Venta> listAll() {
@@ -34,6 +37,8 @@ public class VentaImpl implements IVentaService{
 	            .monto_total(ventaDTO.getMonto_total())
 	            .cliente(clienteRepository.findById(ventaDTO.getCliente_uuid())
 	                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado")))
+	            .empleado(empleadoRepository.findById(ventaDTO.getEmpleado_uuid())
+	            		.orElseThrow(() -> new RuntimeException("Empleado no encontrado")))
 	            .build();
 		return ventaRepository.save(venta);
 	}
