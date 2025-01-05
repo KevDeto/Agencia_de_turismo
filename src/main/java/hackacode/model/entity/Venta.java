@@ -29,4 +29,8 @@ public class Venta {
 	@ManyToOne
 	@JoinColumn(name = "cliente_uuid")
 	private Cliente cliente;
+	
+	@ManyToOne
+	@JoinColumn(name = "empleado_uuid")
+	private Empleado empleado;
 }

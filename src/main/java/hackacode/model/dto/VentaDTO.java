@@ -16,4 +16,5 @@ public class VentaDTO {
 	private Date fecha_venta;
 	private double monto_total;
 	private Long cliente_uuid;
+	private Long empleado_uuid;
 }
