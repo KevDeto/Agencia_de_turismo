@@ -39,6 +39,9 @@ public class PaqueteTuristico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigoPaquete;
 
+    @Column(nullable = false)
+    private Double costoPaquete;
+
     @ManyToMany
     @JoinTable(
         name = "paquete_servicio",
@@ -46,7 +49,7 @@ public class PaqueteTuristico {
         inverseJoinColumns = @JoinColumn(name = "codigo_servicio")
     )
     private List<ServicioTuristico> listaServiciosIncluidos;
- 
-    @Column(nullable = false)
-    private Double costoPaquete;
+    
+    @OneToMany(mappedBy = "paquete", cascade = CascadeType.ALL)
+    private List<Venta> ventas;
 }
