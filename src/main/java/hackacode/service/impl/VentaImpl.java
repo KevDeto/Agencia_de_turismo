@@ -76,15 +76,16 @@ public class VentaImpl implements IVentaService{
 		venta.setMonto_total(ventaDTO.getMonto_total());
 		venta.setCliente(cliente);
 		venta.setEmpleado(empleado);
+	
 		
 		if(ventaDTO.getServicio_uuid() != null && ventaDTO.getPaquete_uuid() != null) {
-//			if( ventaDTO.getServicio_uuid() > 0 && ventaDTO.getPaquete_uuid() > 0 ) {
-				throw new RuntimeException("No se puede registrar una venta con un servicio y "
+			if(ventaDTO.getServicio_uuid() != 0 && ventaDTO.getPaquete_uuid() != 0) {
+				throw new RuntimeException("No se puede registrar una venta con un servicio y"
 						+ " un paquete al mismo tiempo");
-//			}
+			}
 		}
 		
-		if(ventaDTO.getServicio_uuid() != null) {
+		if(ventaDTO.getServicio_uuid() != null && ventaDTO.getServicio_uuid() != 0) {
 			ServicioTuristico servicio = servicioRepository.findById(ventaDTO.getServicio_uuid())
 					.orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
 			
@@ -94,7 +95,7 @@ public class VentaImpl implements IVentaService{
 			}
 			venta.setServicio(servicio);
 			
-		}else if (ventaDTO.getPaquete_uuid() != null) {
+		}else if (ventaDTO.getPaquete_uuid() != null && ventaDTO.getPaquete_uuid() != 0) {
 			PaqueteTuristico paquete = paqueteRepository.findById(ventaDTO.getPaquete_uuid())
 					.orElseThrow(() -> new RuntimeException("Paquete no encontrado"));
 			
@@ -107,7 +108,6 @@ public class VentaImpl implements IVentaService{
 		}else {
 			throw new RuntimeException("Debe asociar un servicio o un paquete a la venta");
 		}
-
 		return venta;
 	}
 	
