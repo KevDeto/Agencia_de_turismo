@@ -29,7 +29,7 @@ public class EmpleadoController {
 
     @GetMapping("empleados")
     public ResponseEntity<?> showAll() {
-        List<Empleado> getList = empleadoService.listAll();
+        List<Empleado> getList = empleadoService.listarEmpleados();
         if (getList == null) {
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("No hay registros")
@@ -48,7 +48,7 @@ public class EmpleadoController {
     public ResponseEntity<?> create(@RequestBody EmpleadoDTO empleadoDTO) {
         Empleado empleadoSave = null;
         try {
-        	empleadoSave = empleadoService.save(empleadoDTO);
+        	empleadoSave = empleadoService.crearEmpleado(empleadoDTO);
             return new ResponseEntity<>(MensajeResponse
                     .builder()
                     .mensaje("Guardado correctamente")
@@ -68,10 +68,10 @@ public class EmpleadoController {
     public ResponseEntity<?> update(@RequestBody EmpleadoDTO empleadoDTO, @PathVariable Long id) {
         Empleado empleadoUpdate = null;
         try {
-        	Empleado findCliente = empleadoService.findById(id);
-            if (empleadoService.existsById(id)) {
+        	Empleado findCliente = empleadoService.obtenerEmpleadoPorId(id);
+            if (empleadoService.existeEmpleadoPorId(id)) {
             	empleadoDTO.setUUID(id);
-            	empleadoUpdate = empleadoService.save(empleadoDTO);
+            	empleadoUpdate = empleadoService.crearEmpleado(empleadoDTO);
 
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
@@ -112,8 +112,8 @@ public class EmpleadoController {
     //@ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            Empleado empleadoDelete = empleadoService.findById(id);
-            empleadoService.delete(empleadoDelete);
+            Empleado empleadoDelete = empleadoService.obtenerEmpleadoPorId(id);
+            empleadoService.eliminarEmpleado(empleadoDelete);
             return new ResponseEntity<>(empleadoDelete, HttpStatus.NO_CONTENT);
         } catch (DataAccessException exDt) {
             return new ResponseEntity<>(MensajeResponse.builder()
@@ -126,7 +126,7 @@ public class EmpleadoController {
 
     @GetMapping("empleado/{id}")
     public ResponseEntity<?> showById(@PathVariable Long id) {
-        Empleado empleado = empleadoService.findById(id);
+        Empleado empleado = empleadoService.obtenerEmpleadoPorId(id);
         if (empleado == null) {
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("El registro que intenta buscar no existe")

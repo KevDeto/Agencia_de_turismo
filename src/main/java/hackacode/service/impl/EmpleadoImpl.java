@@ -2,7 +2,6 @@ package hackacode.service.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,15 +9,17 @@ import hackacode.model.dto.EmpleadoDTO;
 import hackacode.model.entity.Empleado;
 import hackacode.model.repository.IEmpleadoRepository;
 import hackacode.service.IEmpleadoService;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class EmpleadoImpl implements IEmpleadoService{
-    @Autowired
-    private IEmpleadoRepository empleadoRepository;
+
+	private final IEmpleadoRepository empleadoRepository;
 
     @Transactional
     @Override
-    public Empleado save(EmpleadoDTO empleadoDTO) {
+    public Empleado crearEmpleado(EmpleadoDTO empleadoDTO) {
     	Empleado cliente = Empleado.builder()
                 .UUID(empleadoDTO.getUUID())
                 .nombre(empleadoDTO.getNombre())
@@ -37,23 +38,23 @@ public class EmpleadoImpl implements IEmpleadoService{
 
     @Transactional(readOnly = true)
     @Override
-    public Empleado findById(Long id) {
+    public Empleado obtenerEmpleadoPorId(Long id) {
         return empleadoRepository.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
-    public void delete(Empleado empleado) {
+    public void eliminarEmpleado(Empleado empleado) {
     	empleadoRepository.delete(empleado);
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existeEmpleadoPorId(Long id) {
         return empleadoRepository.existsById(id);
     }
 
     @Override
-    public List<Empleado> listAll() {
+    public List<Empleado> listarEmpleados() {
         return (List<Empleado>)empleadoRepository.findAll();
     }
 }

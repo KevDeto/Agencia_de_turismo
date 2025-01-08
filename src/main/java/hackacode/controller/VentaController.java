@@ -48,7 +48,7 @@ public class VentaController {
 	public ResponseEntity<?> create(@RequestBody VentaDTO ventaDTO){
 		VentaDTO ventaSave = null;
         try {
-        	ventaSave = ventaService.registrarVenta(ventaDTO);
+        	ventaSave = ventaService.crearVenta(ventaDTO);
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("Guardado correctamente")
                     .objeto(ventaDTO)
@@ -67,10 +67,10 @@ public class VentaController {
 	public ResponseEntity<?> update(@RequestBody VentaDTO ventaDTO, @PathVariable Long id) {
 		VentaDTO ventaUpdate = null;
 		try {
-			VentaDTO findVenta = ventaService.buscarVentaPorId(id);
+			VentaDTO findVenta = ventaService.obtenerVentaPorId(id);
 			if(findVenta != null) {
                 ventaDTO.setUUID(id);
-                ventaUpdate = ventaService.registrarVenta(ventaDTO);
+                ventaUpdate = ventaService.crearVenta(ventaDTO);
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
                         .mensaje("Guardado correctamente")
@@ -104,7 +104,7 @@ public class VentaController {
 	@DeleteMapping("venta/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		try {
-			VentaDTO ventaDelete = ventaService.buscarVentaPorId(id);
+			VentaDTO ventaDelete = ventaService.obtenerVentaPorId(id);
 			ventaService.eliminarVenta(ventaDelete.getUUID());
 			return new ResponseEntity<>(ventaDelete, HttpStatus.NO_CONTENT);
 		} catch (DataAccessException exDt) {
@@ -118,7 +118,7 @@ public class VentaController {
 	
 	@GetMapping("venta/{id}")
 	public ResponseEntity<?> showById(@PathVariable Long id) {
-		VentaDTO venta = ventaService.buscarVentaPorId(id);
+		VentaDTO venta = ventaService.obtenerVentaPorId(id);
 		if(venta == null) {
 			return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("El registro que intenta buscar no existe")

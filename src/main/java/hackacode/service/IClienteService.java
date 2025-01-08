@@ -6,9 +6,14 @@ import hackacode.model.dto.ClienteDTO;
 import hackacode.model.entity.Cliente;
 
 public interface IClienteService {
-    List<Cliente> listAll();
-    Cliente save(ClienteDTO cliente);
-    Cliente findById(Long id);
-    void delete(Cliente cliente);
-    boolean existsById(Long id);
+	
+	List<Cliente> listarClientes();
+
+	Cliente crearCliente(ClienteDTO cliente);
+
+	Cliente obtenerClientePorId(Long id);
+
+	void eliminarCliente(Cliente cliente);
+
+	boolean existeClientePorId(Long id);
 }

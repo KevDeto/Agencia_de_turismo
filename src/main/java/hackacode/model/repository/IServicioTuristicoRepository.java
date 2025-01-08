@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import hackacode.model.entity.ServicioTuristico;
 
 @Repository
-public interface ServicioTuristicoRepository extends JpaRepository<ServicioTuristico, Long> {
+public interface IServicioTuristicoRepository extends JpaRepository<ServicioTuristico, Long> {
 }
