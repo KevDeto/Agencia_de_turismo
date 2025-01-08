@@ -8,19 +8,15 @@ import org.springframework.stereotype.Service;
 
 import hackacode.model.dto.ServicioTuristicoDTO;
 import hackacode.model.entity.ServicioTuristico;
-<<<<<<< HEAD
-import hackacode.model.repository.ServicioTuristicoRepository;
 
-=======
 import hackacode.model.repository.IServicioTuristicoRepository;
->>>>>>> pruebas2
 import hackacode.service.IServicioTuristicoService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ServicioTuristicoServiceImpl implements IServicioTuristicoService {
+public class IServicioTuristicoServiceImpl implements IServicioTuristicoService {
 
     private final IServicioTuristicoRepository servicioRepository;
 

@@ -10,21 +10,17 @@ import hackacode.model.dto.PaqueteTuristicoDTO;
 import hackacode.model.dto.ServicioTuristicoDTO;
 import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
-<<<<<<< HEAD
-import hackacode.model.repository.PaqueteTuristicoRepository;
-import hackacode.model.repository.ServicioTuristicoRepository;
 
-=======
 import hackacode.model.repository.IPaqueteTuristicoRepository;
 import hackacode.model.repository.IServicioTuristicoRepository;
->>>>>>> pruebas2
+
 import hackacode.service.IPaqueteTuristicoService;
 import lombok.RequiredArgsConstructor;
 
 
 @Service
 @RequiredArgsConstructor
-public class PaqueteTuristicoServiceImpl implements IPaqueteTuristicoService {
+public class IPaqueteTuristicoServiceImpl implements IPaqueteTuristicoService {
 
     private final IPaqueteTuristicoRepository paqueteRepository;
     private final IServicioTuristicoRepository servicioRepository;
