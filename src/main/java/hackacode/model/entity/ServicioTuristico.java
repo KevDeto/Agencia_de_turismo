@@ -59,4 +59,7 @@ public class ServicioTuristico {
 
 	@ManyToMany(mappedBy = "listaServiciosIncluidos", cascade = CascadeType.ALL)
 	private List<PaqueteTuristico> listaPaquetesIncluidos;
+	
+	@OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
+	private List<Venta> ventas;
 }

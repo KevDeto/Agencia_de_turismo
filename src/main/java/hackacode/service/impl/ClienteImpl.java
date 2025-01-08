@@ -1,6 +1,5 @@
 package hackacode.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,18 +7,19 @@ import hackacode.model.dto.ClienteDTO;
 import hackacode.model.entity.Cliente;
 import hackacode.model.repository.IClienteRepository;
 import hackacode.service.IClienteService;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ClienteImpl implements IClienteService {
 
-    @Autowired
-    private IClienteRepository clienteRepository;
+    private final IClienteRepository clienteRepository;
 
     @Transactional
     @Override
-    public Cliente save(ClienteDTO clienteDTO) {
+    public Cliente crearCliente(ClienteDTO clienteDTO) {
         Cliente cliente = Cliente.builder()
                 .UUID(clienteDTO.getUUID())
                 .nombre(clienteDTO.getNombre())
@@ -36,23 +36,23 @@ public class ClienteImpl implements IClienteService {
 
     @Transactional(readOnly = true)
     @Override
-    public Cliente findById(Long id) {
+    public Cliente obtenerClientePorId(Long id) {
         return clienteRepository.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
-    public void delete(Cliente cliente) {
+    public void eliminarCliente(Cliente cliente) {
         clienteRepository.delete(cliente);
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existeClientePorId(Long id) {
         return clienteRepository.existsById(id);
     }
 
     @Override
-    public List<Cliente> listAll() {
+    public List<Cliente> listarClientes() {
         return (List<Cliente>)clienteRepository.findAll();
     }
 

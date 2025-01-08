@@ -29,7 +29,7 @@ public class VentaController {
 	
 	@GetMapping("ventas")
 	public ResponseEntity<?> showAll(){
-		List<Venta> getList = ventaService.listAll();
+		List<VentaDTO> getList = ventaService.listarVentas();
 		if(getList == null) {
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("No hay registros")
@@ -46,9 +46,9 @@ public class VentaController {
 	
 	@PostMapping("venta")
 	public ResponseEntity<?> create(@RequestBody VentaDTO ventaDTO){
-		Venta ventaSave = null;
+		VentaDTO ventaSave = null;
         try {
-        	ventaSave = ventaService.save(ventaDTO);
+        	ventaSave = ventaService.crearVenta(ventaDTO);
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("Guardado correctamente")
                     .objeto(ventaDTO)
@@ -65,12 +65,12 @@ public class VentaController {
 	
 	@PutMapping("venta/{id}")
 	public ResponseEntity<?> update(@RequestBody VentaDTO ventaDTO, @PathVariable Long id) {
-		Venta ventaUpdate = null;
+		VentaDTO ventaUpdate = null;
 		try {
-			Venta findVenta = ventaService.findById(id);
-			if(ventaService.existsById(id)) {
+			VentaDTO findVenta = ventaService.obtenerVentaPorId(id);
+			if(findVenta != null) {
                 ventaDTO.setUUID(id);
-                ventaUpdate = ventaService.save(ventaDTO);
+                ventaUpdate = ventaService.crearVenta(ventaDTO);
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
                         .mensaje("Guardado correctamente")
@@ -78,7 +78,10 @@ public class VentaController {
                         		.UUID(ventaUpdate.getUUID())
                         		.fecha_venta(ventaUpdate.getFecha_venta())
                         		.monto_total(ventaUpdate.getMonto_total())
-                        		.cliente_uuid(ventaUpdate.getCliente().getUUID())
+                        		.cliente_uuid(ventaUpdate.getCliente_uuid())
+                        		.empleado_uuid(ventaUpdate.getEmpleado_uuid())
+                        		.servicio_uuid(ventaUpdate.getServicio_uuid())
+                        		.paquete_uuid(ventaUpdate.getPaquete_uuid())
                         		.build())
                         .build(),
                         HttpStatus.CREATED);
@@ -101,8 +104,8 @@ public class VentaController {
 	@DeleteMapping("venta/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		try {
-			Venta ventaDelete = ventaService.findById(id);
-			ventaService.delete(ventaDelete);
+			VentaDTO ventaDelete = ventaService.obtenerVentaPorId(id);
+			ventaService.eliminarVenta(ventaDelete.getUUID());
 			return new ResponseEntity<>(ventaDelete, HttpStatus.NO_CONTENT);
 		} catch (DataAccessException exDt) {
 			return new ResponseEntity<>(MensajeResponse.builder()
@@ -115,7 +118,7 @@ public class VentaController {
 	
 	@GetMapping("venta/{id}")
 	public ResponseEntity<?> showById(@PathVariable Long id) {
-		Venta venta = ventaService.findById(id);
+		VentaDTO venta = ventaService.obtenerVentaPorId(id);
 		if(venta == null) {
 			return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("El registro que intenta buscar no existe")
@@ -129,7 +132,10 @@ public class VentaController {
                 		.UUID(venta.getUUID())
                 		.fecha_venta(venta.getFecha_venta())
                 		.monto_total(venta.getMonto_total())
-                		.cliente_uuid(venta.getCliente().getUUID())
+                		.cliente_uuid(venta.getCliente_uuid())
+                		.empleado_uuid(venta.getEmpleado_uuid())
+                		.servicio_uuid(venta.getServicio_uuid())
+                		.paquete_uuid(venta.getPaquete_uuid())
                 		.build())
                 .build()
                 ,HttpStatus.OK);		

@@ -3,12 +3,16 @@ package hackacode.service;
 import java.util.List;
 
 import hackacode.model.dto.ServicioTuristicoDTO;
-import hackacode.model.entity.ServicioTuristico;
 
 public interface IServicioTuristicoService {
-    ServicioTuristicoDTO crearServicio(ServicioTuristicoDTO servicioDTO);
-    ServicioTuristicoDTO actualizarServicio(Long codigoServicio, ServicioTuristicoDTO servicioDTO);
-    void eliminarServicio(Long codigoServicio);
-    ServicioTuristicoDTO obtenerServicioPorId(Long codigoServicio);
-    List<ServicioTuristicoDTO> listarServicios();
+
+	ServicioTuristicoDTO crearServicio(ServicioTuristicoDTO servicioDTO);
+
+	ServicioTuristicoDTO actualizarServicio(Long codigoServicio, ServicioTuristicoDTO servicioDTO);
+
+	void eliminarServicio(Long codigoServicio);
+
+	ServicioTuristicoDTO obtenerServicioPorId(Long codigoServicio);
+
+	List<ServicioTuristicoDTO> listarServicios();
 }

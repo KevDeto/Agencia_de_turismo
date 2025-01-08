@@ -1,5 +1,6 @@
 package hackacode.model.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 
@@ -15,6 +16,6 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Cliente extends Persona {
 	
-	@OneToMany(mappedBy = "cliente")
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Venta> ventas;
 }
