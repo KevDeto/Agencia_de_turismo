@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 import hackacode.model.entity.PaqueteTuristico;
 
 @Repository
-public interface PaqueteTuristicoRepository extends JpaRepository<PaqueteTuristico, Long> {
+public interface IPaqueteTuristicoRepository extends JpaRepository<PaqueteTuristico, Long> {
 }
