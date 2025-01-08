@@ -29,7 +29,7 @@ public class ClienteController {
 
     @GetMapping("clientes")
     public ResponseEntity<?> showAll() {
-        List<Cliente> getList = clienteService.listAll();
+        List<Cliente> getList = clienteService.listarClientes();
         if (getList == null) {
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("No hay registros")
@@ -48,7 +48,7 @@ public class ClienteController {
     public ResponseEntity<?> create(@RequestBody ClienteDTO clienteDTO) {
         Cliente clienteSave = null;
         try {
-            clienteSave = clienteService.save(clienteDTO);
+            clienteSave = clienteService.crearCliente(clienteDTO);
             return new ResponseEntity<>(MensajeResponse
                     .builder()
                     .mensaje("Guardado correctamente")
@@ -68,10 +68,10 @@ public class ClienteController {
     public ResponseEntity<?> update(@RequestBody ClienteDTO clienteDTO, @PathVariable Long id) {
         Cliente clienteUpdate = null;
         try {
-            Cliente findCliente = clienteService.findById(id);
-            if (clienteService.existsById(id)) {
+            Cliente findCliente = clienteService.obtenerClientePorId(id);
+            if (clienteService.existeClientePorId(id)) {
                 clienteDTO.setUUID(id);
-                clienteUpdate = clienteService.save(clienteDTO);
+                clienteUpdate = clienteService.crearCliente(clienteDTO);
 
                 return new ResponseEntity<>(MensajeResponse
                         .builder()
@@ -110,8 +110,8 @@ public class ClienteController {
     //@ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            Cliente clienteDelete = clienteService.findById(id);
-            clienteService.delete(clienteDelete);
+            Cliente clienteDelete = clienteService.obtenerClientePorId(id);
+            clienteService.eliminarCliente(clienteDelete);
             return new ResponseEntity<>(clienteDelete, HttpStatus.NO_CONTENT);
         } catch (DataAccessException exDt) {
             return new ResponseEntity<>(MensajeResponse.builder()
@@ -124,7 +124,7 @@ public class ClienteController {
 
     @GetMapping("cliente/{id}")
     public ResponseEntity<?> showById(@PathVariable Long id) {
-        Cliente cliente = clienteService.findById(id);
+        Cliente cliente = clienteService.obtenerClientePorId(id);
         if (cliente == null) {
             return new ResponseEntity<>(MensajeResponse.builder()
                     .mensaje("El registro que intenta buscar no existe")
