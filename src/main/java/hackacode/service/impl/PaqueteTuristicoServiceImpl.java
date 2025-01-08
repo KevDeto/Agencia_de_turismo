@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class IPaqueteTuristicoServiceImpl implements IPaqueteTuristicoService {
+public class PaqueteTuristicoServiceImpl implements IPaqueteTuristicoService {
 
     private final IPaqueteTuristicoRepository paqueteRepository;
     private final IServicioTuristicoRepository servicioRepository;

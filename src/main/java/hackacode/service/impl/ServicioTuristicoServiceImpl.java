@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class IServicioTuristicoServiceImpl implements IServicioTuristicoService {
+public class ServicioTuristicoServiceImpl implements IServicioTuristicoService {
 
     private final IServicioTuristicoRepository servicioRepository;
 

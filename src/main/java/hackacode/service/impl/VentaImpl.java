@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class IVentaImpl implements IVentaService{
+public class VentaImpl implements IVentaService{
 	
 	private final IVentaRepository ventaRepository;
 	private final IClienteRepository clienteRepository;
