@@ -2,24 +2,22 @@ package hackacode.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import hackacode.model.dto.ServicioTuristicoDTO;
-import hackacode.model.entity.PaqueteTuristico;
 import hackacode.model.entity.ServicioTuristico;
-import hackacode.model.repository.ServicioTuristicoRepository;
+import hackacode.model.repository.IServicioTuristicoRepository;
 import hackacode.service.IServicioTuristicoService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ServicioTuristicoServiceImpl implements IServicioTuristicoService {
 
-    @Autowired
-    private ServicioTuristicoRepository servicioRepository;
+    private final IServicioTuristicoRepository servicioRepository;
 
     @Override
     public ServicioTuristicoDTO crearServicio(ServicioTuristicoDTO servicioDTO) {

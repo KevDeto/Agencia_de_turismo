@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import hackacode.model.dto.VentaDTO;
 import hackacode.model.entity.Cliente;
@@ -17,33 +16,30 @@ import hackacode.model.entity.Venta;
 import hackacode.model.repository.IClienteRepository;
 import hackacode.model.repository.IEmpleadoRepository;
 import hackacode.model.repository.IVentaRepository;
-import hackacode.model.repository.PaqueteTuristicoRepository;
-import hackacode.model.repository.ServicioTuristicoRepository;
+import hackacode.model.repository.IPaqueteTuristicoRepository;
+import hackacode.model.repository.IServicioTuristicoRepository;
 import hackacode.service.IVentaService;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class VentaImpl implements IVentaService{
 	
-	@Autowired
-	private IVentaRepository ventaRepository;
-	@Autowired
-	private IClienteRepository clienteRepository;
-	@Autowired
-	private IEmpleadoRepository empleadoRepository;
-	@Autowired
-	private ServicioTuristicoRepository servicioRepository;
-	@Autowired
-	private PaqueteTuristicoRepository paqueteRepository;
+	private final IVentaRepository ventaRepository;
+	private final IClienteRepository clienteRepository;
+	private final IEmpleadoRepository empleadoRepository;
+	private final IServicioTuristicoRepository servicioRepository;
+	private final IPaqueteTuristicoRepository paqueteRepository;
 	
 	@Override
-	public VentaDTO registrarVenta(VentaDTO ventaDTO) {
+	public VentaDTO crearVenta(VentaDTO ventaDTO) {
 		Venta venta = convertirADominio(ventaDTO);
 		Venta nuevaVenta = ventaRepository.save(venta);
 		return convertirAVentaDTO(nuevaVenta);
 	}
 
 	@Override
-	public VentaDTO buscarVentaPorId(Long numVenta) {
+	public VentaDTO obtenerVentaPorId(Long numVenta) {
 		Venta venta = ventaRepository.findById(numVenta)
 				.orElseThrow(() -> new RuntimeException("Venta no encontrada"));
 		return convertirAVentaDTO(venta);
