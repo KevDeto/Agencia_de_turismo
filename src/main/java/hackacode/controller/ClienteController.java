@@ -28,124 +28,103 @@ public class ClienteController {
     private IClienteService clienteService;
 
     @GetMapping("clientes")
-    public ResponseEntity<?> showAll() {
-        List<Cliente> getList = clienteService.listarClientes();
-        if (getList == null) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("No hay registros")
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.OK);
+    public ResponseEntity<MensajeResponse> showAll() {
+        List<Cliente> listaClientes = clienteService.listarClientes();
+        if (listaClientes.isEmpty()) {
+        	return ResponseEntity.ok(MensajeResponse.builder()
+        			.mensaje("No se han encontrado registros.")
+        			.objeto(listaClientes)
+        			.build());
         }
-        return new ResponseEntity<>(MensajeResponse.builder()
-                .mensaje("")
-                .objeto(getList)
-                .build(),
-                HttpStatus.OK);
+        return ResponseEntity.ok(MensajeResponse.builder()
+                .mensaje("Clientes recuperados correctamente.")
+                .objeto(listaClientes)
+                .build());
     }
 
     @PostMapping("cliente")
-    public ResponseEntity<?> create(@RequestBody ClienteDTO clienteDTO) {
-        Cliente clienteSave = null;
+    public ResponseEntity<MensajeResponse> create(@RequestBody ClienteDTO clienteDTO) {
         try {
-            clienteSave = clienteService.crearCliente(clienteDTO);
-            return new ResponseEntity<>(MensajeResponse
-                    .builder()
-                    .mensaje("Guardado correctamente")
-                    .objeto(clienteDTO)
-                    .build(),
-                    HttpStatus.CREATED);
-        } catch (DataAccessException exDt) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
+        	Cliente clienteSave = clienteService.crearCliente(clienteDTO);
+        	return ResponseEntity.status(HttpStatus.CREATED)
+        			.body(MensajeResponse.builder()
+        					.mensaje("Cliente creado correctamente.")
+        					.objeto(clienteSave)
+        					.build());
+
+        } catch (DataAccessException e) {
+        	return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+        			.body(MensajeResponse.builder()
+        					.mensaje("Error al crear cliente: " + e.getMessage())
+        					.objeto(null)
+        					.build());
         }
     }
 
     @PutMapping("cliente/{id}")
-    public ResponseEntity<?> update(@RequestBody ClienteDTO clienteDTO, @PathVariable Long id) {
-        Cliente clienteUpdate = null;
-        try {
-            Cliente findCliente = clienteService.obtenerClientePorId(id);
-            if (clienteService.existeClientePorId(id)) {
-                clienteDTO.setUUID(id);
-                clienteUpdate = clienteService.crearCliente(clienteDTO);
-
-                return new ResponseEntity<>(MensajeResponse
-                        .builder()
-                        .mensaje("Guardado correctamente")
-                        .objeto(ClienteDTO.builder()
-                                .UUID(clienteUpdate.getUUID())
-                                .nombre(clienteUpdate.getNombre())
-                                .apellido(clienteUpdate.getApellido())
-                                .dni(clienteUpdate.getDni())
-                                .nacionalidad(clienteUpdate.getNacionalidad())
-                                .email(clienteUpdate.getEmail())
-                                .celular(clienteUpdate.getCelular())
-                                .fecha_nac(clienteUpdate.getFecha_nac())
-                                .direccion(clienteUpdate.getDireccion())
-                                .build())
-                        .build(),
-                        HttpStatus.CREATED);
-            } else {
-                return new ResponseEntity<>(MensajeResponse.builder()
-                        .mensaje("El registro que intenta actualizar no se encuentra en la base de datos")
-                        .objeto(null)
-                        .build(),
-                        HttpStatus.NOT_FOUND);
-            }
-
-        } catch (DataAccessException exDt) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
-        }
+    public ResponseEntity<MensajeResponse> update(@RequestBody ClienteDTO clienteDTO, @PathVariable Long id) {
+    	if(!clienteService.existeClientePorId(id)) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    				.body(MensajeResponse.builder()
+    						.mensaje("Cliente con ID " + id + " no encontrado.")
+    						.objeto(null)
+    						.build());
+    	}
+    	try {
+			clienteDTO.setUUID(id);
+			Cliente clienteUpdate = clienteService.crearCliente(clienteDTO);
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(MensajeResponse.builder()
+							.mensaje("Cliente modificado correctamente.")
+							.objeto(clienteUpdate)
+							.build());
+		} catch (DataAccessException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(MensajeResponse.builder()
+							.mensaje("Error al modificar cliente: " + e.getMessage())
+							.objeto(null)
+							.build());
+		}
     }
 
     @DeleteMapping("cliente/{id}")
-    //@ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<MensajeResponse> delete(@PathVariable Long id) {
+    	if(!clienteService.existeClientePorId(id)) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    				.body(MensajeResponse.builder()
+    						.mensaje("Cliente con ID " + id + " no encontrado.")
+    						.objeto(null)
+    						.build());
+    	}
         try {
             Cliente clienteDelete = clienteService.obtenerClientePorId(id);
             clienteService.eliminarCliente(clienteDelete);
-            return new ResponseEntity<>(clienteDelete, HttpStatus.NO_CONTENT);
-        } catch (DataAccessException exDt) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
+            
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        
+        } catch (DataAccessException e) {
+        	return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+        			.body(MensajeResponse.builder()
+        					.mensaje("Error al eliminar cliente:" + e.getMessage())
+        					.objeto(null)
+        					.build());
         }
     }
 
     @GetMapping("cliente/{id}")
-    public ResponseEntity<?> showById(@PathVariable Long id) {
+    public ResponseEntity<MensajeResponse> showById(@PathVariable Long id) {
         Cliente cliente = clienteService.obtenerClientePorId(id);
         if (cliente == null) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("El registro que intenta buscar no existe")
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(MensajeResponse.builder()
+                    .mensaje("Cliente con ID " + id + " no encontrado.")
                     .objeto(null)
-                    .build(),
-                    HttpStatus.NOT_FOUND);
+                    .build()
+                );
         }
-        return new ResponseEntity<>(MensajeResponse.builder()
-                .mensaje("")
-                .objeto(ClienteDTO.builder()
-                        .UUID(cliente.getUUID())
-                        .nombre(cliente.getNombre())
-                        .apellido(cliente.getApellido())
-                        .dni(cliente.getDni())
-                        .nacionalidad(cliente.getNacionalidad())
-                        .email(cliente.getEmail())
-                        .celular(cliente.getCelular())
-                        .fecha_nac(cliente.getFecha_nac())
-                        .direccion(cliente.getDireccion())
-                        .build())
-                .build(),
-                HttpStatus.OK);
+        return ResponseEntity.ok(MensajeResponse.builder()
+        		.mensaje("Cliente recuperado correctamente.")
+        		.objeto(cliente)
+        		.build());
     }
 }
