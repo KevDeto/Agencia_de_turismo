@@ -1,16 +1,20 @@
 package hackacode.model.payload;
 
 import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 @Data
-@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class MensajeResponse implements Serializable {
-
-    private String mensaje;
+	private static final long serialVersionUID = 1L;
+	
+	private String mensaje;
     private Object objeto;
 
 }
