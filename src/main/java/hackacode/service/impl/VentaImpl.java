@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hackacode.model.dto.VentaDTO;
@@ -18,7 +17,9 @@ import hackacode.model.repository.IEmpleadoRepository;
 import hackacode.model.repository.IVentaRepository;
 import hackacode.model.repository.IPaqueteTuristicoRepository;
 import hackacode.model.repository.IServicioTuristicoRepository;
+
 import hackacode.service.IVentaService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
