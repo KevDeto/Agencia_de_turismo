@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hackacode.model.dto.VentaDTO;
+import hackacode.model.entity.Empleado;
 import hackacode.model.entity.Venta;
 import hackacode.model.payload.MensajeResponse;
 import hackacode.service.IVentaService;
@@ -28,116 +29,99 @@ public class VentaController {
 	private IVentaService ventaService;
 	
 	@GetMapping("ventas")
-	public ResponseEntity<?> showAll(){
-		List<VentaDTO> getList = ventaService.listarVentas();
-		if(getList == null) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("No hay registros")
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.OK);
+	public ResponseEntity<MensajeResponse> showAll(){
+		List<VentaDTO> listaVentas = ventaService.listarVentas();
+		if(listaVentas.isEmpty()) {
+			return ResponseEntity.ok(MensajeResponse.builder()
+					.mensaje("No se han encontrado registros.")
+					.objeto(listaVentas)
+					.build());
 		}
-        return new ResponseEntity<>(MensajeResponse.builder()
-                .mensaje("")
-                .objeto(getList)
-                .build(),
-                HttpStatus.OK);
+		return ResponseEntity.ok(MensajeResponse.builder()
+				.mensaje("Ventas recuperadas correctamente")
+				.objeto(listaVentas)
+				.build());
 	}
 	
 	@PostMapping("venta")
-	public ResponseEntity<?> create(@RequestBody VentaDTO ventaDTO){
-		VentaDTO ventaSave = null;
-        try {
-        	ventaSave = ventaService.crearVenta(ventaDTO);
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("Guardado correctamente")
-                    .objeto(ventaDTO)
-                    .build(),
-                    HttpStatus.CREATED);
-		} catch (DataAccessException exDt) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
+	public ResponseEntity<MensajeResponse> create(@RequestBody VentaDTO ventaDTO){
+		try {
+			VentaDTO ventaSave = ventaService.crearVenta(ventaDTO);
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(MensajeResponse.builder()
+							.mensaje("Venta creada correctamente.")
+							.objeto(ventaSave)
+							.build());
+		} catch (DataAccessException e) {
+			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+					.body(MensajeResponse.builder()
+							.mensaje("Error al crear venta: " + e.getMessage())
+							.objeto(null)
+							.build());
 		}
 	}
 	
 	@PutMapping("venta/{id}")
-	public ResponseEntity<?> update(@RequestBody VentaDTO ventaDTO, @PathVariable Long id) {
-		VentaDTO ventaUpdate = null;
-		try {
-			VentaDTO findVenta = ventaService.obtenerVentaPorId(id);
-			if(findVenta != null) {
-                ventaDTO.setUUID(id);
-                ventaUpdate = ventaService.crearVenta(ventaDTO);
-                return new ResponseEntity<>(MensajeResponse
-                        .builder()
-                        .mensaje("Guardado correctamente")
-                        .objeto(VentaDTO.builder()
-                        		.UUID(ventaUpdate.getUUID())
-                        		.fecha_venta(ventaUpdate.getFecha_venta())
-                        		.monto_total(ventaUpdate.getMonto_total())
-                        		.cliente_uuid(ventaUpdate.getCliente_uuid())
-                        		.empleado_uuid(ventaUpdate.getEmpleado_uuid())
-                        		.servicio_uuid(ventaUpdate.getServicio_uuid())
-                        		.paquete_uuid(ventaUpdate.getPaquete_uuid())
-                        		.build())
-                        .build(),
-                        HttpStatus.CREATED);
-			}else {
-                return new ResponseEntity<>(MensajeResponse.builder()
-                        .mensaje("El registro que intenta actualizar no se encuentra en la base de datos")
-                        .objeto(null)
-                        .build(),
-                        HttpStatus.NOT_FOUND);
-            }
-		} catch (DataAccessException exDt) {
-            return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
+	public ResponseEntity<MensajeResponse> update(@RequestBody VentaDTO ventaDTO, @PathVariable Long id) {
+    	VentaDTO venta = ventaService.obtenerVentaPorId(id);
+		if(venta == null) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    				.body(MensajeResponse.builder()
+    						.mensaje("Venta con ID " + id + " no encontrado.")
+    						.objeto(null)
+    						.build());
+    	}
+    	try {
+			ventaDTO.setUUID(id);
+			VentaDTO ventaUpdate = ventaService.crearVenta(ventaDTO);
+			return ResponseEntity.ok(MensajeResponse.builder()
+							.mensaje("Venta actualizada correctamente.")
+							.objeto(ventaUpdate)
+							.build());
+		} catch (DataAccessException e) {
+			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+					.body(MensajeResponse.builder()
+							.mensaje("Error al modificar venta: " + e.getMessage())
+							.objeto(null)
+							.build());
 		}
 	}
 	
 	@DeleteMapping("venta/{id}")
-	public ResponseEntity<?> delete(@PathVariable Long id) {
-		try {
-			VentaDTO ventaDelete = ventaService.obtenerVentaPorId(id);
-			ventaService.eliminarVenta(ventaDelete.getUUID());
-			return new ResponseEntity<>(ventaDelete, HttpStatus.NO_CONTENT);
-		} catch (DataAccessException exDt) {
-			return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje(exDt.getMessage())
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
-		}
+	public ResponseEntity<MensajeResponse> delete(@PathVariable Long id) {
+		VentaDTO venta = ventaService.obtenerVentaPorId(id);
+    	if(venta == null) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    				.body(MensajeResponse.builder()
+    						.mensaje("Venta con ID " + id +" no encontrado.")
+    						.objeto(null)
+    						.build());
+    	}
+    	try {
+			ventaService.eliminarVenta(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (DataAccessException e) {
+        	return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+        			.body(MensajeResponse.builder()
+        					.mensaje("Error al eliminar venta: " + e.getMessage())
+        					.objeto(null)
+        					.build());
+        }
 	}
 	
 	@GetMapping("venta/{id}")
 	public ResponseEntity<?> showById(@PathVariable Long id) {
-		VentaDTO venta = ventaService.obtenerVentaPorId(id);
-		if(venta == null) {
-			return new ResponseEntity<>(MensajeResponse.builder()
-                    .mensaje("El registro que intenta buscar no existe")
-                    .objeto(null)
-                    .build(),
-                    HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<>(MensajeResponse.builder()
-                .mensaje("")
-                .objeto(VentaDTO.builder()
-                		.UUID(venta.getUUID())
-                		.fecha_venta(venta.getFecha_venta())
-                		.monto_total(venta.getMonto_total())
-                		.cliente_uuid(venta.getCliente_uuid())
-                		.empleado_uuid(venta.getEmpleado_uuid())
-                		.servicio_uuid(venta.getServicio_uuid())
-                		.paquete_uuid(venta.getPaquete_uuid())
-                		.build())
-                .build()
-                ,HttpStatus.OK);		
+        VentaDTO venta = ventaService.obtenerVentaPorId(id);
+    	if(venta == null) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    				.body(MensajeResponse.builder()
+    						.mensaje("Venta con ID " + id + " no encontrado.")
+    						.objeto(null)
+    						.build());
+    	}
+        return ResponseEntity.ok(MensajeResponse.builder()
+        		.mensaje("Venta recuperada correctamente.")
+        		.objeto(venta)
+        		.build());		
 	}
 }
