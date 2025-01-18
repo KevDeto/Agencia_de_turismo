@@ -73,8 +73,7 @@ public class ClienteController {
     	try {
 			clienteDTO.setUUID(id);
 			Cliente clienteUpdate = clienteService.crearCliente(clienteDTO);
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(MensajeResponse.builder()
+			return ResponseEntity.ok(MensajeResponse.builder()
 							.mensaje("Cliente modificado correctamente.")
 							.objeto(clienteUpdate)
 							.build());
@@ -116,11 +115,10 @@ public class ClienteController {
         Cliente cliente = clienteService.obtenerClientePorId(id);
         if (cliente == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(MensajeResponse.builder()
-                    .mensaje("Cliente con ID " + id + " no encontrado.")
-                    .objeto(null)
-                    .build()
-                );
+            		.body(MensajeResponse.builder()
+            				.mensaje("Cliente con ID " + id + " no encontrado.")
+            				.objeto(null)
+            				.build());
         }
         return ResponseEntity.ok(MensajeResponse.builder()
         		.mensaje("Cliente recuperado correctamente.")
