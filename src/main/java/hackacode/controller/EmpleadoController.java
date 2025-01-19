@@ -29,7 +29,7 @@ public class EmpleadoController {
 
     @GetMapping("empleados")
     public ResponseEntity<MensajeResponse> showAll() {
-        List<Empleado> listaEmpleados = empleadoService.listarEmpleados();
+        List<EmpleadoDTO> listaEmpleados = empleadoService.listarEmpleados();
         if(listaEmpleados.isEmpty()) {
         	return ResponseEntity.ok(MensajeResponse.builder()
         			.mensaje("No se han encontrado registros.")
@@ -45,7 +45,7 @@ public class EmpleadoController {
     @PostMapping("empleado")
     public ResponseEntity<MensajeResponse> create(@RequestBody EmpleadoDTO empleadoDTO) {
         try {
-        	Empleado empleadoSave = empleadoService.crearEmpleado(empleadoDTO);
+        	EmpleadoDTO empleadoSave = empleadoService.crearEmpleado(empleadoDTO);
         	return ResponseEntity.status(HttpStatus.CREATED)
         			.body(MensajeResponse.builder()
         					.mensaje("Empleado creado correctamente.")
@@ -71,7 +71,7 @@ public class EmpleadoController {
     	}
     	try {
 			empleadoDTO.setUUID(id);
-			Empleado empleadoUpdate = empleadoService.crearEmpleado(empleadoDTO);
+			EmpleadoDTO empleadoUpdate = empleadoService.actualizarEmpleado(id,empleadoDTO);
 			return ResponseEntity.ok(MensajeResponse.builder()
 							.mensaje("Empleado actualizado correctamente.")
 							.objeto(empleadoUpdate)
@@ -95,8 +95,8 @@ public class EmpleadoController {
     						.build());
     	}
     	try {
-            Empleado empleadoDelete = empleadoService.obtenerEmpleadoPorId(id);
-            empleadoService.eliminarEmpleado(empleadoDelete);
+//            EmpleadoDTO empleadoDelete = empleadoService.obtenerEmpleadoPorId(id);
+            empleadoService.eliminarEmpleado(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (DataAccessException e) {
         	return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
@@ -109,7 +109,7 @@ public class EmpleadoController {
 
     @GetMapping("empleado/{id}")
     public ResponseEntity<?> showById(@PathVariable Long id) {
-        Empleado empleado = empleadoService.obtenerEmpleadoPorId(id);
+        EmpleadoDTO empleado = empleadoService.obtenerEmpleadoPorId(id);
     	if(empleado == null) {
     		return ResponseEntity.status(HttpStatus.NOT_FOUND)
     				.body(MensajeResponse.builder()

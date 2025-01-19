@@ -29,7 +29,7 @@ public class ClienteController {
 
     @GetMapping("clientes")
     public ResponseEntity<MensajeResponse> showAll() {
-        List<Cliente> listaClientes = clienteService.listarClientes();
+        List<ClienteDTO> listaClientes = clienteService.listarClientes();
         if (listaClientes.isEmpty()) {
         	return ResponseEntity.ok(MensajeResponse.builder()
         			.mensaje("No se han encontrado registros.")
@@ -45,7 +45,7 @@ public class ClienteController {
     @PostMapping("cliente")
     public ResponseEntity<MensajeResponse> create(@RequestBody ClienteDTO clienteDTO) {
         try {
-        	Cliente clienteSave = clienteService.crearCliente(clienteDTO);
+        	ClienteDTO clienteSave = clienteService.crearCliente(clienteDTO);
         	return ResponseEntity.status(HttpStatus.CREATED)
         			.body(MensajeResponse.builder()
         					.mensaje("Cliente creado correctamente.")
@@ -72,7 +72,7 @@ public class ClienteController {
     	}
     	try {
 			clienteDTO.setUUID(id);
-			Cliente clienteUpdate = clienteService.crearCliente(clienteDTO);
+			ClienteDTO clienteUpdate = clienteService.actualizarCliente(id, clienteDTO);
 			return ResponseEntity.ok(MensajeResponse.builder()
 							.mensaje("Cliente modificado correctamente.")
 							.objeto(clienteUpdate)
@@ -96,8 +96,8 @@ public class ClienteController {
     						.build());
     	}
         try {
-            Cliente clienteDelete = clienteService.obtenerClientePorId(id);
-            clienteService.eliminarCliente(clienteDelete);
+//            ClienteDTO clienteDelete = clienteService.obtenerClientePorId(id);
+            clienteService.eliminarCliente(id);
             
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         
@@ -112,7 +112,7 @@ public class ClienteController {
 
     @GetMapping("cliente/{id}")
     public ResponseEntity<MensajeResponse> showById(@PathVariable Long id) {
-        Cliente cliente = clienteService.obtenerClientePorId(id);
+        ClienteDTO cliente = clienteService.obtenerClientePorId(id);
         if (cliente == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
             		.body(MensajeResponse.builder()
