@@ -3,8 +3,10 @@ package hackacode.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import hackacode.exception.ResourceNotFoundException;
 import hackacode.model.dto.ClienteDTO;
 import hackacode.model.entity.Cliente;
+import hackacode.model.mapper.ClienteMapper;
 import hackacode.model.repository.IClienteRepository;
 import hackacode.service.IClienteService;
 import lombok.RequiredArgsConstructor;
@@ -12,37 +14,44 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class ClienteImpl implements IClienteService {
 
     private final IClienteRepository clienteRepository;
+    private final ClienteMapper clienteMapper;
 
+    
+    public ClienteImpl(ClienteMapper clienteMapper, IClienteRepository clienteRepository) {
+    	this.clienteRepository = clienteRepository;
+        this.clienteMapper = clienteMapper;
+    }
+    
+    @Override
+    public List<ClienteDTO> listarClientes() {
+    	return clienteMapper.convertirListaEntidadEnDto(clienteRepository.findAll());
+    }
+    
     @Transactional
     @Override
-    public Cliente crearCliente(ClienteDTO clienteDTO) {
-        Cliente cliente = Cliente.builder()
-                .UUID(clienteDTO.getUUID())
-                .nombre(clienteDTO.getNombre())
-                .apellido(clienteDTO.getApellido())
-                .dni(clienteDTO.getDni())
-                .nacionalidad(clienteDTO.getNacionalidad())
-                .email(clienteDTO.getEmail())
-                .celular(clienteDTO.getCelular())
-                .fecha_nac(clienteDTO.getFecha_nac())
-                .direccion(clienteDTO.getDireccion())
-                .build();
-        return clienteRepository.save(cliente);
+    public ClienteDTO crearCliente(ClienteDTO clienteDTO) {
+    	Cliente cliente = clienteMapper.convertirDtoEnEntidad(clienteDTO);
+    	Cliente clienteGuardado = clienteRepository.save(cliente);
+    	return clienteMapper.convertirEntidadEnDto(clienteGuardado);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Cliente obtenerClientePorId(Long id) {
-        return clienteRepository.findById(id).orElse(null);
+    public ClienteDTO obtenerClientePorId(Long id) {
+    	Cliente cliente = clienteRepository.findById(id)
+    			.orElseThrow(() -> new ResourceNotFoundException("Cliente con ID " + id + " no encontrado."));
+        return clienteMapper.convertirEntidadEnDto(cliente);
     }
 
     @Transactional
     @Override
-    public void eliminarCliente(Cliente cliente) {
+    public void eliminarCliente(Long id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente con ID " + id + " no encontrado."));
         clienteRepository.delete(cliente);
     }
 
@@ -51,9 +60,13 @@ public class ClienteImpl implements IClienteService {
         return clienteRepository.existsById(id);
     }
 
-    @Override
-    public List<Cliente> listarClientes() {
-        return (List<Cliente>)clienteRepository.findAll();
-    }
+	@Override
+	public ClienteDTO actualizarCliente(Long id, ClienteDTO clienteDTO) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente con ID " + id + " no encontrado."));
+        clienteMapper.actualizarEntidadDesdeDto(clienteDTO, cliente);
+        Cliente clienteActualizado = clienteRepository.save(cliente);
+        return clienteMapper.convertirEntidadEnDto(clienteActualizado);
+	}
 
 }
