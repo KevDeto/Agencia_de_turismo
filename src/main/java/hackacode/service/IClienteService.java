@@ -3,17 +3,18 @@ package hackacode.service;
 import java.util.List;
 
 import hackacode.model.dto.ClienteDTO;
-import hackacode.model.entity.Cliente;
 
 public interface IClienteService {
 	
-	List<Cliente> listarClientes();
+	List<ClienteDTO> listarClientes();
 
-	Cliente crearCliente(ClienteDTO cliente);
+	ClienteDTO crearCliente(ClienteDTO clienteDTO);
+	
+	ClienteDTO actualizarCliente(Long id, ClienteDTO clienteDTO);
 
-	Cliente obtenerClientePorId(Long id);
+	ClienteDTO obtenerClientePorId(Long id);
 
-	void eliminarCliente(Cliente cliente);
+	void eliminarCliente(Long id);
 
 	boolean existeClientePorId(Long id);
 }

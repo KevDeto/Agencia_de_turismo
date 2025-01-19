@@ -7,13 +7,15 @@ import hackacode.model.entity.Empleado;
 
 public interface IEmpleadoService {
 	
-	List<Empleado> listarEmpleados();
+	List<EmpleadoDTO> listarEmpleados();
 
-	Empleado crearEmpleado(EmpleadoDTO empleado);
+	EmpleadoDTO crearEmpleado(EmpleadoDTO empleadoDTO);
 
-	Empleado obtenerEmpleadoPorId(Long id);
+	EmpleadoDTO obtenerEmpleadoPorId(Long id);
+	
+	EmpleadoDTO actualizarEmpleado(Long id, EmpleadoDTO empleadoDTO);
 
-	void eliminarEmpleado(Empleado empleado);
+	void eliminarEmpleado(Long id);
 
 	boolean existeEmpleadoPorId(Long id);
 }
